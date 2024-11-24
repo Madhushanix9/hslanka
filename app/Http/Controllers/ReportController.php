@@ -3578,5 +3578,129 @@ class ReportController extends Controller
         return view('report.activity_log')->with(compact('users', 'transaction_types'));
 
                            
+    }   
+    
+    public function outstandingReport()
+    {
+        $business_id = request()->session()->get('user.business_id');
+
+        if (request()->ajax()) {
+            $query = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
+                        ->leftJoin('transaction_sell_lines as tsl', function($join) {
+                            $join->on('transactions.id', '=', 'tsl.transaction_id')
+                                ->whereNull('tsl.parent_sell_line_id');
+                        })
+                        ->leftJoin('users as u', 'transactions.created_by', '=', 'u.id')
+                        ->join('business_locations AS bl','transactions.location_id','=','bl.id')
+                        ->leftJoin('transactions AS SR','transactions.id','=', 'SR.return_parent_id')
+                        ->where('transactions.business_id', $business_id)
+                        ->where('transactions.type', 'sell')
+                        ->where('transactions.status', 'final')
+                        ->select(
+                            'transactions.id',
+                            'transactions.transaction_date',
+                            'transactions.type',
+                            'transactions.invoice_no',
+                            'contacts.name',
+                            'contacts.first_name',
+                            'contacts.supplier_business_name',
+                            'transactions.status',
+                            'transactions.payment_status',
+                            'transactions.final_total',
+                            'transactions.total_before_tax',
+                            DB::raw('DATE_FORMAT(transactions.transaction_date, "%Y/%m/%d") as sale_date'),
+                            DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by"),
+                            DB::raw('(SELECT SUM(IF(TP.is_return = 1,-1*TP.amount,TP.amount)) FROM transaction_payments AS TP WHERE
+                                TP.transaction_id=transactions.id) as total_paid'),
+                            'bl.name as business_location',
+                            DB::raw('COUNT(SR.id) as return_exists'),
+                            DB::raw('(SELECT SUM(TP2.amount) FROM transaction_payments AS TP2 WHERE
+                                TP2.transaction_id=SR.id ) as return_paid'),
+                            DB::raw('COALESCE(SR.final_total, 0) as amount_return'),
+                            'SR.id as return_transaction_id',
+                            DB::raw('SUM(tsl.quantity - tsl.so_quantity_invoiced) as so_qty_remaining')
+                        )
+                        ->groupBy('transactions.id')
+                        ->orderByRaw('
+                                CASE 
+                                    WHEN contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != "" 
+                                        THEN contacts.supplier_business_name 
+                                    ELSE contacts.first_name 
+                                    END ASC
+                                ');
+
+            $permitted_locations = auth()->user()->permitted_locations();
+            if ($permitted_locations != 'all') {
+                $query->whereIn('transactions.location_id', $permitted_locations);
+            }
+
+            if (!empty(request()->sale_start) && !empty(request()->sale_end)) {
+                $start = request()->sale_start;
+                $end =  request()->sale_end;
+                $query->where(function ($q) use ($start, $end) {
+                    $q->where(function ($qr) use ($start, $end) {
+                        $qr->whereDate('transactions.transaction_date', '>=', $start)
+                           ->whereDate('transactions.transaction_date', '<=', $end);
+                    });
+                });
+            }
+
+            $customer_id = request()->get('customer_id', null);
+            if (!empty($customer_id)) {
+                $query->where('contacts.id', $customer_id);
+            }
+
+            $location_id = request()->get('location_id', null);
+            if (!empty($location_id)) {
+                $query->where('transactions.location_id', $location_id);
+            }
+
+            return Datatables::of($query)
+                ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
+                ->editColumn('invoice_no', function ($row) {
+                    $invoice_no = $row->invoice_no;
+                    return $invoice_no;
+                })
+
+                ->addColumn('contact_name', '@if(!empty($supplier_business_name)) {{$supplier_business_name}}, <br> @endif {{$name}}')
+                ->editColumn(
+                    'final_total',
+                    '<span class="final-total" data-orig-value="{{$final_total}}">@format_currency($final_total)</span>'
+                )
+                ->editColumn(
+                    'total_paid',
+                    '<span class="total-paid" data-orig-value="{{$total_paid}}">@format_currency($total_paid)</span>'
+                )
+                ->addColumn('total_remaining', function ($row) {
+                    $total_remaining =  $row->final_total - $row->total_paid;
+                    $total_remaining_html = '<span class="payment_due" data-orig-value="' . $total_remaining . '">' . $this->transactionUtil->num_f($total_remaining, true) . '</span>';
+                    return $total_remaining_html;
+                })
+                ->addColumn('return_due', function ($row) {
+                    $return_due_html = '';
+                    if (!empty($row->return_exists)) {
+                        $return_due = $row->amount_return - $row->return_paid;
+                        $return_due_html .= '<a href="' . action("TransactionPaymentController@show", [$row->return_transaction_id]) . '" class="view_purchase_return_payment_modal"><span class="sell_return_due" data-orig-value="' . $return_due . '">' . $this->transactionUtil->num_f($return_due, true) . '</span></a>';
+                    }
+                    return $return_due_html;
+                })
+                ->addColumn('total_due', function ($row) {
+                    $total_remaining = $row->final_total - $row->total_paid;
+                    $return_due = 0;
+                    if (!empty($row->return_exists)) {
+                        $return_due = $row->amount_return - $row->return_paid; 
+                    }
+                    $total_due = $total_remaining - $return_due; 
+                    return '<span class="total_due" data-orig-value="' . $total_due . '">' . $this->transactionUtil->num_f($total_due, true) . '</span>';
+                })
+                ->rawColumns(['return_due', 'final_total', 'transaction_date', 'invoice_no', 'contact_name','total_paid','total_remaining','total_due'])
+                ->make(true);
+        }
+
+        $suppliers = Contact::suppliersDropdown($business_id, false);
+        $customers = Contact::customersDropdown($business_id, false);
+        $business_locations = BusinessLocation::forDropdown($business_id);
+        
+        return view('report.outstanding_report')->with(compact('suppliers', 'customers', 'business_locations'));
     }
 }
