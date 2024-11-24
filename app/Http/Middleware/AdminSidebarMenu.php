@@ -466,7 +466,7 @@ class AdminSidebarMenu
             if (auth()->user()->can('purchase_n_sell_report.view') || auth()->user()->can('contacts_report.view')
                 || auth()->user()->can('stock_report.view') || auth()->user()->can('tax_report.view')
                 || auth()->user()->can('trending_product_report.view') || auth()->user()->can('sales_representative.view') || auth()->user()->can('register_report.view')
-                || auth()->user()->can('expense_report.view')) {
+                || auth()->user()->can('expense_report.view')  || auth()->user()->can('view_outstanding.view') ) {
                 $menu->dropdown(
                     __('report.reports'),
                     function ($sub) use ($enabled_modules, $is_admin) {
@@ -629,6 +629,14 @@ class AdminSidebarMenu
                                 action('ReportController@activityLog'),
                                 __('lang_v1.activity_log'),
                                 ['icon' => 'fa fas fa-user-secret', 'active' => request()->segment(2) == 'activity-log']
+                            );
+                        }
+
+                        if (auth()->user()->can('view_outstanding.view')) {
+                            $sub->url(
+                                action('ReportController@outstandingReport'),
+                                __('report.outstanding_report'),
+                                ['icon' => 'fa fas fa-user-secret', 'active' => request()->segment(2) == 'outstanding-report']
                             );
                         }
                     },

@@ -1295,6 +1295,14 @@
               </label>
             </div>
           </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'outstanding_report.view', in_array('outstanding_report.view', $role_permissions), 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.outstanding_report.view' ) }}
+              </label>
+            </div>
+          </div>
         </div>
         </div>
         <hr>
