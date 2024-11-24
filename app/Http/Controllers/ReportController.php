@@ -3598,11 +3598,10 @@ class ReportController extends Controller
                         ->where('transactions.status', 'final')
                         ->select(
                             'transactions.id',
-                            'transactions.transaction_date',
                             'transactions.type',
-                            'transactions.invoice_no',
+                            'transactions.transaction_date as transaction_date',
+                            'transactions.invoice_no as invoice_no',
                             'contacts.name',
-                            'contacts.first_name',
                             'contacts.supplier_business_name',
                             'transactions.status',
                             'transactions.payment_status',
@@ -3618,16 +3617,17 @@ class ReportController extends Controller
                                 TP2.transaction_id=SR.id ) as return_paid'),
                             DB::raw('COALESCE(SR.final_total, 0) as amount_return'),
                             'SR.id as return_transaction_id',
-                            DB::raw('SUM(tsl.quantity - tsl.so_quantity_invoiced) as so_qty_remaining')
+                            DB::raw('SUM(tsl.quantity - tsl.so_quantity_invoiced) as so_qty_remaining'),
+                            DB::raw("IF(contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != '', contacts.supplier_business_name, contacts.name) AS contact_name"),
+                            DB::raw("
+                             CASE 
+                                WHEN contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != '' 
+                                    THEN contacts.supplier_business_name 
+                                ELSE contacts.first_name 
+                            END AS first_name
+                        ")
                         )
-                        ->groupBy('transactions.id')
-                        ->orderByRaw('
-                                CASE 
-                                    WHEN contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != "" 
-                                        THEN contacts.supplier_business_name 
-                                    ELSE contacts.first_name 
-                                    END ASC
-                                ');
+                        ->groupBy('transactions.id');   
 
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
@@ -3661,8 +3661,7 @@ class ReportController extends Controller
                     $invoice_no = $row->invoice_no;
                     return $invoice_no;
                 })
-
-                ->addColumn('contact_name', '@if(!empty($supplier_business_name)) {{$supplier_business_name}}, <br> @endif {{$name}}')
+                
                 ->editColumn(
                     'final_total',
                     '<span class="final-total" data-orig-value="{{$final_total}}">@format_currency($final_total)</span>'

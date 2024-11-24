@@ -1469,6 +1469,7 @@ $(document).ready(function() {
     outstanding_report_table = $('#outstanding_report_table').DataTable({
         processing: true,
         serverSide: true,
+        aaSorting: [[0, 'desc']],
         ajax: {
             url: '/reports/outstanding-report',
             data: function(d) {
@@ -1489,14 +1490,14 @@ $(document).ready(function() {
             },
         },
         columns: [
-            { data: 'transaction_date', name: 'transaction_date' },
-            { data: 'invoice_no', name: 'invoice_no' },
-            { data: 'contact_name', name: 'contact_name', orderable: true },
-            { data: 'final_total', name: 'final_total', orderable: true },
-            { data: 'total_paid', name: 'total_paid', orderable: true },
-            { data: 'total_remaining', name: 'total_remaining' },
-            { data: 'return_due', name: 'return_due', orderable: false, searchable: false },
-            { data: 'total_due', name: 'total_due', orderable: false, searchable: false },
+            { data: 'transaction_date', name: 'transaction_date', orderable: true },
+            { data: 'invoice_no', name: 'invoice_no', orderable: true },
+            { data: 'first_name', name: 'first_name', orderable: true },
+            { data: 'final_total', name: 'final_total', orderable: true, searchable: false },
+            { data: 'total_paid', name: 'total_paid', orderable: true, searchable: false },
+            { data: 'total_remaining', name: 'total_remaining' , searchable: false, orderable: true },
+            { data: 'return_due', name: 'return_due', searchable: false, oorderable: true  },
+            { data: 'total_due', name: 'total_due', searchable: false, orderable: true  },
         ],
         fnDrawCallback: function(oSettings) {
             var total_amount = sum_table_col($('#outstanding_report_table'), 'final-total');
