@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Permission;
@@ -52,6 +53,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'register_report.view'],
             ['name' => 'sales_representative.view'],
             ['name' => 'expense_report.view'],
+            ['name' => 'view_outstanding.view'],
 
             ['name' => 'business_settings.access'],
             ['name' => 'barcode_settings.access'],
@@ -82,13 +84,11 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'dashboard.data'],
         ];
 
-        $insert_data = [];
-        $time_stamp = \Carbon::now()->toDateTimeString();
         foreach ($data as $d) {
-            $d['guard_name'] = 'web';
-            $d['created_at'] = $time_stamp;
-            $insert_data[] = $d;
+            Permission::firstOrCreate(
+                ['name' => $d['name'], 'guard_name' => 'web'],  
+                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+            );
         }
-        Permission::insert($insert_data);
     }
 }
