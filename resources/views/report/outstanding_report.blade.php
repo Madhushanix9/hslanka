@@ -71,7 +71,7 @@
             <div class="col-md-12">
                 @component('components.widget', ['class' => 'box-primary'])
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="outstanding_report_table">
+                        <table class="table table-bordered" id="outstanding_report_table">
                             <thead>
                                 <tr>
                                     <th>@lang('messages.date')</th>

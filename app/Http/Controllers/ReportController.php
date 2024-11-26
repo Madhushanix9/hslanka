@@ -3620,14 +3620,25 @@ class ReportController extends Controller
                             DB::raw('SUM(tsl.quantity - tsl.so_quantity_invoiced) as so_qty_remaining'),
                             DB::raw("IF(contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != '', contacts.supplier_business_name, contacts.name) AS contact_name"),
                             DB::raw("
-                             CASE 
-                                WHEN contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != '' 
-                                    THEN contacts.supplier_business_name 
-                                ELSE contacts.first_name 
-                            END AS first_name
-                        ")
+                                CASE 
+                                    WHEN contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != '' 
+                                        THEN contacts.supplier_business_name 
+                                    ELSE contacts.name 
+                                END AS first_name"
+                           )
+                       
                         )
-                        ->groupBy('transactions.id');   
+                        ->groupBy('transactions.id')
+                        ->orderByRaw("
+                                CASE 
+                                    WHEN contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != '' 
+                                        THEN contacts.supplier_business_name 
+                                    WHEN contacts.first_name IS NOT NULL AND contacts.first_name != '' 
+                                        THEN contacts.first_name
+                                    ELSE contacts.name
+                                END ASC
+                            ")
+                        ->orderBy('transactions.invoice_no', 'ASC');
 
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
@@ -3657,6 +3668,8 @@ class ReportController extends Controller
 
             return Datatables::of($query)
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
+                ->editColumn('first_name', '{{$first_name}}')
+
                 ->editColumn('invoice_no', function ($row) {
                     $invoice_no = $row->invoice_no;
                     return $invoice_no;
@@ -3692,7 +3705,7 @@ class ReportController extends Controller
                     $total_due = $total_remaining - $return_due; 
                     return '<span class="total_due" data-orig-value="' . $total_due . '">' . $this->transactionUtil->num_f($total_due, true) . '</span>';
                 })
-                ->rawColumns(['return_due', 'final_total', 'transaction_date', 'invoice_no', 'contact_name','total_paid','total_remaining','total_due'])
+                ->rawColumns(['return_due', 'final_total', 'transaction_date', 'invoice_no', 'contact_name','total_paid','total_remaining','total_due','first_name'])
                 ->make(true);
         }
 

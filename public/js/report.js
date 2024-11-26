@@ -1466,6 +1466,7 @@ $(document).ready(function() {
         });
     }
 
+    //Outstanding Report
     outstanding_report_table = $('#outstanding_report_table').DataTable({
         processing: true,
         serverSide: true,
@@ -1488,16 +1489,40 @@ $(document).ready(function() {
                 d.customer_id = $('select#ir_customer_id').val();
                 d.location_id = $('select#ir_location_id').val();
             },
+            dataSrc: function(json) {
+                // Modify the JSON data source to include empty rows
+                let modified_data = [];
+                let last_customer = null;
+
+                json.data.forEach((row) => {
+                    if (last_customer !== null && last_customer !== row.first_name) {
+                        modified_data.push({
+                            transaction_date: '',
+                            invoice_no: '',
+                            first_name: '',
+                            final_total: '',
+                            total_paid: '',
+                            total_remaining: '',
+                            return_due: '',
+                            total_due: ''
+                        });
+                    }
+                    modified_data.push(row);
+                    last_customer = row.first_name;
+                });
+
+                return modified_data;
+            },
         },
         columns: [
-            { data: 'transaction_date', name: 'transaction_date', orderable: true },
-            { data: 'invoice_no', name: 'invoice_no', orderable: true },
-            { data: 'first_name', name: 'first_name', orderable: true },
-            { data: 'final_total', name: 'final_total', orderable: true, searchable: false },
-            { data: 'total_paid', name: 'total_paid', orderable: true, searchable: false },
-            { data: 'total_remaining', name: 'total_remaining' , searchable: false, orderable: true },
-            { data: 'return_due', name: 'return_due', searchable: false, oorderable: true  },
-            { data: 'total_due', name: 'total_due', searchable: false, orderable: true  },
+            { data: 'transaction_date', name: 'transaction_date', orderable: false },
+            { data: 'invoice_no', name: 'invoice_no', orderable: false },
+            { data: 'first_name', name: 'first_name', orderable: false },
+            { data: 'final_total', name: 'final_total', orderable: false, searchable: false },
+            { data: 'total_paid', name: 'total_paid', orderable: false, searchable: false },
+            { data: 'total_remaining', name: 'total_remaining' , searchable: false, orderable: false },
+            { data: 'return_due', name: 'return_due', searchable: false, orderable: false },
+            { data: 'total_due', name: 'total_due', searchable: false, orderable: false },
         ],
         fnDrawCallback: function(oSettings) {
             var total_amount = sum_table_col($('#outstanding_report_table'), 'final-total');
@@ -1516,7 +1541,66 @@ $(document).ready(function() {
             $('#footer_all_due').text(all_due);
             __currency_convert_recursively($('#outstanding_report_table'));
         },
+
+        dom: '<"row"<"col-sm-12 text-center"B>>frtip',
+        buttons: [
+            {
+                extend: 'csv',
+                text: '<i class="fa fa-file-csv" aria-hidden="true"></i> Export to CSV',
+                className: 'btn-sm',
+                exportOptions: {
+                    columns: ':visible',
+                },
+                footer: true,
+            },
+            {
+                extend: 'excel',
+                text: '<i class="fa fa-file-excel" aria-hidden="true"></i> Export to Excel',
+                className: 'btn-sm',
+                exportOptions: {
+                    columns: ':visible',
+                },
+                footer: true,
+            },
+            {
+                extend: 'pdf',
+                text: '<i class="fa fa-file-pdf" aria-hidden="true"></i> Export to PDF',
+                className: 'btn-sm',
+                exportOptions: {
+                    columns: ':visible',
+                },
+                footer: true,
+                customize: function (doc) {
+                    // Increase the height of empty rows
+                    doc.content[1].table.body.forEach((row, rowIndex) => {
+                        if (row.every(cell => cell.text === '' || cell === '')) { 
+                            row.forEach(cell => {
+                                cell.fillColor = '#f9f9f9';
+                                cell.text = ' ';
+                                cell.style = { fontSize: 8 };
+                            });
+                            row[0].margin = [0, 0, 0, 2]; 
+                        }
+                    });
+            
+                    // Adjust styles globally to avoid overlapping or issues
+                    doc.styles.tableBodyEven = { margin: [0, 2, 0, 0] }; // Even-row margin
+                    doc.styles.tableBodyOdd = { margin: [0, 2, 0, 0] };  // Odd-row margin
+                }
+            },
+            
+            {
+                extend: 'print',
+                text: '<i class="fa fa-print" aria-hidden="true"></i> Print',
+                className: 'btn-sm',
+                exportOptions: {
+                    columns: ':visible',
+                },
+                footer: true,
+            }
+        ],
     });
+
     
     $(document).on('change', '#ir_customer_id, #ir_location_id', function(){
         outstanding_report_table.ajax.reload();
