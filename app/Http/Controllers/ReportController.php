@@ -3719,7 +3719,7 @@ class ReportController extends Controller
                     return '<span class="total_due" data-orig-value="' . $total_due . '">' . $this->transactionUtil->num_f($total_due, true) . '</span>';
                 })
                 ->addColumn('total_due_amount', function ($row) {
-                    $customer_total_due = $this->getCustomerTotalDue($row->customer_id, $row->business_id);
+                    $customer_total_due = $this->getCustomerTotalDue($row->customer_id, $row->business_id, request()->sale_start, request()->sale_end);
                     return $row->row_num == 1
                         ? '<span class="total_due_amount" data-orig-value="' . $customer_total_due . '">' . $this->transactionUtil->num_f($customer_total_due, true) . '</span>'
                         : '';      
@@ -3735,9 +3735,9 @@ class ReportController extends Controller
         return view('report.outstanding_report')->with(compact('suppliers', 'customers', 'business_locations'));
     }
 
-    public function getCustomerTotalDue($customer_id, $business_id){
+    public function getCustomerTotalDue($customer_id, $business_id, $sale_start, $sale_end){
         
-        $transactions = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
+        $query = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
         ->leftJoin('transaction_sell_lines as tsl', function($join) {
             $join->on('transactions.id', '=', 'tsl.transaction_id')
                 ->whereNull('tsl.parent_sell_line_id');
@@ -3782,8 +3782,14 @@ class ReportController extends Controller
                 END AS first_name"
             )
         )
-        ->groupBy('transactions.id')
-        ->get();
+        ->groupBy('transactions.id');
+
+        if (!empty($sale_start) && !empty($sale_end)) {
+            $query->whereDate('transactions.transaction_date', '>=', $sale_start)
+                  ->whereDate('transactions.transaction_date', '<=', $sale_end);
+        }
+    
+        $transactions = $query->get();
 
         $total_due = 0;
         foreach ($transactions as $transaction) {
