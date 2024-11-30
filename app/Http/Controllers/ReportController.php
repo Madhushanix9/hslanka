@@ -3596,8 +3596,10 @@ class ReportController extends Controller
                         ->where('transactions.business_id', $business_id)
                         ->where('transactions.type', 'sell')
                         ->where('transactions.status', 'final')
+                        ->where('transactions.payment_status', '!=', 'paid')
                         ->select(
                             'transactions.id',
+                            'transactions.business_id',
                             'transactions.type',
                             'transactions.transaction_date as transaction_date',
                             'transactions.invoice_no as invoice_no',
@@ -3607,6 +3609,7 @@ class ReportController extends Controller
                             'transactions.payment_status',
                             'transactions.final_total',
                             'transactions.total_before_tax',
+                            'contacts.id AS customer_id',
                             DB::raw('DATE_FORMAT(transactions.transaction_date, "%Y/%m/%d") as sale_date'),
                             DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by"),
                             DB::raw('(SELECT SUM(IF(TP.is_return = 1,-1*TP.amount,TP.amount)) FROM transaction_payments AS TP WHERE
@@ -3625,8 +3628,11 @@ class ReportController extends Controller
                                         THEN contacts.supplier_business_name 
                                     ELSE contacts.name 
                                 END AS first_name"
-                           )
-                       
+                        ),
+                        DB::raw('ROW_NUMBER() OVER (PARTITION BY contacts.id ORDER BY transactions.transaction_date DESC) AS row_num'),
+                        DB::raw("SUM(transactions.final_total - 
+                                (SELECT SUM(IF(TP.is_return = 1, -1*TP.amount, TP.amount)) FROM transaction_payments AS TP WHERE TP.transaction_id = transactions.id)
+                            ) OVER (PARTITION BY contacts.id) AS customer_total_due")                     
                         )
                         ->groupBy('transactions.id')
                         ->orderByRaw("
@@ -3696,6 +3702,13 @@ class ReportController extends Controller
                     }
                     return $return_due_html;
                 })
+              
+                ->filterColumn('first_name', function ($query, $keyword) {
+                    $query->where( function($q) use($keyword) {
+                        $q->where('contacts.name', 'like', "%{$keyword}%")
+                        ->orWhere('contacts.supplier_business_name', 'like', "%{$keyword}%");
+                    });
+                })
                 ->addColumn('total_due', function ($row) {
                     $total_remaining = $row->final_total - $row->total_paid;
                     $return_due = 0;
@@ -3705,7 +3718,13 @@ class ReportController extends Controller
                     $total_due = $total_remaining - $return_due; 
                     return '<span class="total_due" data-orig-value="' . $total_due . '">' . $this->transactionUtil->num_f($total_due, true) . '</span>';
                 })
-                ->rawColumns(['return_due', 'final_total', 'transaction_date', 'invoice_no', 'contact_name','total_paid','total_remaining','total_due','first_name'])
+                ->addColumn('total_due_amount', function ($row) {
+                    $customer_total_due = $this->getCustomerTotalDue($row->customer_id, $row->business_id);
+                    return $row->row_num == 1
+                        ? '<span class="total_due_amount" data-orig-value="' . $customer_total_due . '">' . $this->transactionUtil->num_f($customer_total_due, true) . '</span>'
+                        : '';      
+                })
+                ->rawColumns(['return_due', 'final_total', 'transaction_date', 'invoice_no', 'contact_name','total_paid','total_remaining','total_due','first_name','total_due_amount'])
                 ->make(true);
         }
 
@@ -3714,5 +3733,68 @@ class ReportController extends Controller
         $business_locations = BusinessLocation::forDropdown($business_id);
         
         return view('report.outstanding_report')->with(compact('suppliers', 'customers', 'business_locations'));
+    }
+
+    public function getCustomerTotalDue($customer_id, $business_id){
+        
+        $transactions = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
+        ->leftJoin('transaction_sell_lines as tsl', function($join) {
+            $join->on('transactions.id', '=', 'tsl.transaction_id')
+                ->whereNull('tsl.parent_sell_line_id');
+        })
+        ->leftJoin('users as u', 'transactions.created_by', '=', 'u.id')
+        ->join('business_locations AS bl','transactions.location_id','=','bl.id')
+        ->leftJoin('transactions AS SR','transactions.id','=', 'SR.return_parent_id')
+        ->where('transactions.business_id', $business_id)
+        ->where('contacts.id', $customer_id)
+        ->where('transactions.type', 'sell')
+        ->where('transactions.status', 'final')
+        ->where('transactions.payment_status', '!=', 'paid')
+        ->select(
+            'transactions.id',
+            'transactions.type',
+            'transactions.transaction_date as transaction_date',
+            'transactions.invoice_no as invoice_no',
+            'contacts.name',
+            'contacts.supplier_business_name',
+            'transactions.status',
+            'transactions.payment_status',
+            'transactions.final_total',
+            'transactions.total_before_tax',
+            'contacts.id AS customer_id',
+            DB::raw('DATE_FORMAT(transactions.transaction_date, "%Y/%m/%d") as sale_date'),
+            DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by"),
+            DB::raw('(SELECT SUM(IF(TP.is_return = 1,-1*TP.amount,TP.amount)) FROM transaction_payments AS TP WHERE
+                TP.transaction_id=transactions.id) as total_paid'),
+            'bl.name as business_location',
+            DB::raw('COUNT(SR.id) as return_exists'),
+            DB::raw('(SELECT SUM(TP2.amount) FROM transaction_payments AS TP2 WHERE
+                TP2.transaction_id=SR.id ) as return_paid'),
+            DB::raw('COALESCE(SR.final_total, 0) as amount_return'),
+            'SR.id as return_transaction_id',
+            DB::raw('SUM(tsl.quantity - tsl.so_quantity_invoiced) as so_qty_remaining'),
+            DB::raw("IF(contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != '', contacts.supplier_business_name, contacts.name) AS contact_name"),
+            DB::raw("
+                CASE 
+                    WHEN contacts.supplier_business_name IS NOT NULL AND contacts.supplier_business_name != '' 
+                        THEN contacts.supplier_business_name 
+                    ELSE contacts.name 
+                END AS first_name"
+            )
+        )
+        ->groupBy('transactions.id')
+        ->get();
+
+        $total_due = 0;
+        foreach ($transactions as $transaction) {
+            $total_remaining = $transaction->final_total - $transaction->total_paid;
+            $return_due = 0;
+            if (!empty($transaction->return_exists)) {
+                $return_due = $transaction->amount_return - $transaction->return_paid;
+            }
+            $total_due += $total_remaining - $return_due;
+        }
+        
+        return $total_due;
     }
 }
