@@ -1477,4 +1477,6 @@ return [
     'quantity_in_second_unit' => 'Quantity in :unit',
     'login_as_username' => 'Login as :username',
     'back_to_username' => 'Back to :username',
+    'all_due' => 'All Due',
+    'total_due' => 'Total Due',
 ];

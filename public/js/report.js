@@ -1451,6 +1451,7 @@ $(document).ready(function() {
     $('#tax_report_location_id, #tax_report_date_range, #tax_report_contact_id').change(function() {
         updateTaxReport();
     });
+
 });
 
 function updatePurchaseSell() {
