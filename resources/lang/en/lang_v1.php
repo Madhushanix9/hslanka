@@ -1479,4 +1479,5 @@ return [
     'back_to_username' => 'Back to :username',
     'all_due' => 'All Due',
     'total_due' => 'Total Due',
+    'standard' => 'Standard'
 ];

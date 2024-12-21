@@ -239,7 +239,8 @@ class InvoiceLayoutController extends Controller
                 'detailed' => __('lang_v1.detailed') . ' (' . __('lang_v1.for_normal_printer') . ')',
                 'columnize-taxes' => __('lang_v1.columnize_taxes') . ' (' . __('lang_v1.for_normal_printer') . ')',
                 'slim' => __('lang_v1.slim') . ' (' . __('lang_v1.recomended_for_80mm') . ')',
-                'slim2' => __('lang_v1.slim') . ' 2 (' . __('lang_v1.recomended_for_58mm') . ')'
+                'slim2' => __('lang_v1.slim') . ' 2 (' . __('lang_v1.recomended_for_58mm') . ')',
+                'standard' => __('lang_v1.standard') ,
             ];
     }
 }
