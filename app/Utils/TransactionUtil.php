@@ -2023,7 +2023,8 @@ class TransactionUtil extends Util
                 'line_total_uf' => $line->unit_price_inc_tax * $line->quantity,
                 'line_total_exc_tax' => $this->num_f($line->unit_price * $line->quantity, false, $business_details),
                 'line_total_exc_tax_uf' => $line->unit_price * $line->quantity,
-                'variation_id' => $variation->id
+                'variation_id' => $variation->id,
+                'product_description' => $line->product_description
             ];
 
             $temp = [];

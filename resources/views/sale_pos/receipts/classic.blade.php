@@ -217,7 +217,7 @@
 	<div class="col-xs-12">
 		<br/>
 		@php
-			$p_width = 45;
+			$p_width = 20;
 		@endphp
 		@if(!empty($receipt_details->item_discount_label))
 			@php
@@ -234,16 +234,17 @@
 			<thead>
 				<tr class="table table-bordered table-top-cell-border table-slim">
 				    <th class="text-center" width="4%">#</th>
-					<th width="{{$p_width}}%">{{$receipt_details->table_product_label}}</th>
-					<th class="text-center" width="15%">{{$receipt_details->table_qty_label}}</th>
-					<th class="text-center" width="15%">{{$receipt_details->table_unit_price_label}}</th>
+					<th width="{{$p_width}}%">@lang('sale.description')</th>
+					<th width="20%">{{$receipt_details->table_product_label}}</th>
+					<th class="text-center" width="10%">{{$receipt_details->table_qty_label}}</th>
+					<th class="text-center" width="10%">{{$receipt_details->table_unit_price_label}}</th>
 					@if(!empty($receipt_details->discounted_unit_price_label))
-						<th class="text-center" width="10%">{{$receipt_details->discounted_unit_price_label}}</th>
+						<th class="text-center" width="5%">{{$receipt_details->discounted_unit_price_label}}</th>
 					@endif
 					@if(!empty($receipt_details->item_discount_label))
-						<th class="text-center" width="10%">{{$receipt_details->item_discount_label}}</th>
+						<th class="text-center" width="5%">{{$receipt_details->item_discount_label}}</th>
 					@endif
-					<th class="text-center" width="15%">{{$receipt_details->table_subtotal_label}}</th>
+					<th class="text-center" width="10%">{{$receipt_details->table_subtotal_label}}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -279,6 +280,7 @@
                             </small>
                             @endif
                         </td>
+						<td>{{$line['product_description']}}</td>
 						<td class="text-center">
 							{{$line['quantity']}} {{$line['units']}} 
 
