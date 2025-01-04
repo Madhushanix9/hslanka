@@ -179,10 +179,13 @@
 		<table class="table table-condensed table-bordered table-striped table-responsive" id="pos_table">
 			<thead>
 				<tr>
-					<th class="tex-center @if(!empty($pos_settings['inline_service_staff'])) col-md-3 @else col-md-4 @endif">	
+					<th class="tex-center @if(!empty($pos_settings['inline_service_staff'])) col-md-2 @else col-md-2 @endif">	
 						@lang('sale.product') @show_tooltip(__('lang_v1.tooltip_sell_product_column'))
 					</th>
-					<th class="text-center col-md-3">
+					<th class="text-center col-md-4">
+						@lang('sale.description')
+					</th>
+					<th class="text-center col-md-2">
 						@lang('sale.qty')
 					</th>
 					@if(!empty($pos_settings['inline_service_staff']))
@@ -193,7 +196,7 @@
 					<th class="text-center col-md-2 {{$hide_tax}}">
 						@lang('sale.price_inc_tax')
 					</th>
-					<th class="text-center col-md-2">
+					<th class="text-center col-md-3">
 						@lang('sale.subtotal')
 					</th>
 					<th class="text-center"><i class="fas fa-times" aria-hidden="true"></i></th>

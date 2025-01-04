@@ -175,7 +175,7 @@
 	@endif
 	</td>
 	<td>
-		{!! $product->product_description !!}
+		<input 	class="form-control pos_quantity mousetrap" type="text" name="products[{{$row_count}}][product_description]" value="{{($product->product_description)}}"  ></td>
 	</td>
 
 	<td>

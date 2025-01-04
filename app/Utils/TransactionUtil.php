@@ -382,7 +382,8 @@ class TransactionUtil extends Util
                     'res_service_staff_id' => !empty($product['res_service_staff_id']) ? $product['res_service_staff_id'] : null,
                     'res_line_order_status' => !empty($product['res_service_staff_id']) ? 'received' : null,
                     'so_line_id' => !empty($product['so_line_id']) ? $product['so_line_id'] : null,
-                    'secondary_unit_quantity' => !empty($product['secondary_unit_quantity']) ? $this->num_uf($product['secondary_unit_quantity']) : 0
+                    'secondary_unit_quantity' => !empty($product['secondary_unit_quantity']) ? $this->num_uf($product['secondary_unit_quantity']) : 0,
+                    'product_description' => !empty($product['product_description']) ? $product['product_description'] : null
                 ];
 
                 foreach ($extra_line_parameters as $key => $value) {
@@ -602,7 +603,9 @@ class TransactionUtil extends Util
             'sell_line_note' => !empty($product['sell_line_note']) ? $product['sell_line_note'] : '',
             'sub_unit_id' => !empty($product['sub_unit_id']) ? $product['sub_unit_id'] : null,
             'res_service_staff_id' => !empty($product['res_service_staff_id']) ? $product['res_service_staff_id'] : null,
-            'secondary_unit_quantity' => !empty($product['secondary_unit_quantity']) ? $this->num_uf($product['secondary_unit_quantity']) : 0
+            'secondary_unit_quantity' => !empty($product['secondary_unit_quantity']) ? $this->num_uf($product['secondary_unit_quantity']) : 0,
+            'product_description' => !empty($product['product_description']) ? $product['product_description'] : null
+
         ]);
         $sell_line->save();
 

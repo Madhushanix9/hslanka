@@ -848,7 +848,8 @@ class SellPosController extends Controller
                             'transaction_sell_lines.res_service_staff_id',
                             'units.id as unit_id',
                             'transaction_sell_lines.sub_unit_id',
-                            DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available')
+                            DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available'),
+                            'transaction_sell_lines.product_description'
                         )
                         ->get();
         if (!empty($sell_details)) {
