@@ -1,11 +1,11 @@
 <div class="modal fade no-print" id="recent_transactions_modal" tabindex="-1" role="dialog" aria-labelledby="modalTitle">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog recent-transaction-mobile-view" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title">@lang('lang_v1.recent_transactions')</h4>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body recent-transaction-mobile-view-scroll">
 				<div class="nav-tabs-custom">
 					<ul class="nav nav-tabs">
 						<li class="active"><a href="#tab_final" data-toggle="tab" aria-expanded="true"><b><i class="fa fa-check"></i> @lang('sale.final')</b></a></li>
@@ -30,3 +30,15 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div>
+
+<style>
+          
+	.recent-transaction-mobile-view {
+		top: 3% !important;
+	}
+
+	.recent-transaction-mobile-view-scroll {
+		max-height: 40vh;
+		overflow-y: auto;
+	}
+</style>

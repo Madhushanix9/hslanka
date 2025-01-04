@@ -1690,7 +1690,7 @@ class SellPosController extends Controller
                             ->groupBy('transactions.id')
                             ->select('transactions.*')
                             ->with(['contact', 'table'])
-                            ->limit(10)
+               
                             ->get();
 
         return view('sale_pos.partials.recent_transactions')
