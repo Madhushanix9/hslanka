@@ -174,6 +174,9 @@
 
 	@endif
 	</td>
+	<td>
+		{!! $product->product_description !!}
+	</td>
 
 	<td>
 		{{-- If edit then transaction sell lines will be present --}}
