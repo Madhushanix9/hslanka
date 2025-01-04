@@ -174,6 +174,9 @@
 
 	@endif
 	</td>
+	<td>
+		<input 	class="form-control mousetrap" type="text" name="products[{{$row_count}}][product_description]" value="{{($product->product_description)}}"  ></td>
+	</td>
 
 	<td>
 		{{-- If edit then transaction sell lines will be present --}}
@@ -364,7 +367,7 @@
 			</td>
 		@endif
 	@endif
-	<td class="{{$hide_tax}}">
+	<td>
 		<input type="text" name="products[{{$row_count}}][unit_price_inc_tax]" class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}" @if(!$edit_price) readonly @endif @if(!empty($pos_settings['enable_msp'])) data-rule-min-value="{{$unit_price_inc_tax}}" data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($unit_price_inc_tax)])}}" @endif>
 	</td>
 	@if(!empty($common_settings['enable_product_warranty']) && !empty($is_direct_sell))
