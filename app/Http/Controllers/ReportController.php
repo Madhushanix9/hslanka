@@ -3673,7 +3673,7 @@ class ReportController extends Controller
             }
 
             return Datatables::of($query)
-                ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
+                ->editColumn('transaction_date', '{{ \Carbon\Carbon::parse($transaction_date)->format("d-m-Y") }}')
                 ->editColumn('first_name', '{{$first_name}}')
 
                 ->editColumn('invoice_no', function ($row) {
