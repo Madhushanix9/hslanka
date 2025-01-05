@@ -79,8 +79,8 @@
                                     <th>@lang('contact.customer')</th>
                                     <th>@lang('sale.total_amount')</th>
                                     <th>@lang('sale.total_paid')</th>
-                                    <th>@lang('lang_v1.sell_due')</th>
-                                    <th>@lang('lang_v1.sell_return_due')</th>
+                                    {{-- <th>@lang('lang_v1.sell_due')</th>
+                                    <th>@lang('lang_v1.sell_return_due')</th> --}}
                                     <th>@lang('lang_v1.all_due')</th>
                                     <th>@lang('lang_v1.total_due')</th>
                                 </tr>
@@ -90,8 +90,8 @@
                                     <td colspan="3"><strong>@lang('sale.total'):</strong></td>
                                     <td id="footer_total_amount" class="display_currency" data-currency_symbol="true"></td>
                                     <td id="footer_total_paid" class="display_currency" data-currency_symbol="true"></td>
-                                    <td id="footer_sell_due" class="display_currency" data-currency_symbol="true"></td>
-                                    <td id="footer_sell_return_due" class="display_currency" data-currency_symbol="true"></td>
+                                    {{-- <td id="footer_sell_due" class="display_currency" data-currency_symbol="true"></td>
+                                    <td id="footer_sell_return_due" class="display_currency" data-currency_symbol="true"></td> --}}
                                     <td id="footer_all_due" class="display_currency" data-currency_symbol="true"></td>
                                     <td id="footer_total_due" class="display_currency" data-currency_symbol="true"></td>
                                 </tr>
@@ -155,7 +155,8 @@
                 columns: [{
                         data: 'transaction_date',
                         name: 'transaction_date',
-                        orderable: false
+                        orderable: false,
+                        className: 'text-center'
                     },
                     {
                         data: 'invoice_no',
@@ -179,18 +180,18 @@
                         orderable: false,
                         searchable: false
                     },
-                    {
-                        data: 'total_remaining',
-                        name: 'total_remaining',
-                        searchable: false,
-                        orderable: false
-                    },
-                    {
-                        data: 'return_due',
-                        name: 'return_due',
-                        searchable: false,
-                        orderable: false
-                    },
+                    // {
+                    //     data: 'total_remaining',
+                    //     name: 'total_remaining',
+                    //     searchable: false,
+                    //     orderable: false
+                    // },
+                    // {
+                    //     data: 'return_due',
+                    //     name: 'return_due',
+                    //     searchable: false,
+                    //     orderable: false
+                    // },
                     {
                         data: 'total_due',
                         name: 'total_due',
