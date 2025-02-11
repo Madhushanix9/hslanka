@@ -27,14 +27,14 @@
     @endif
     <div class="container-fluid">
         <div class="row eq-height-row">
-            <div class="col-md-5 col-sm-5 hidden-xs left-col eq-height-col" >
+            <div class="col-md-8 col-sm-8 hidden-xs left-col eq-height-col" >
                 <div class="left-col-content login-header"> 
                     <div style="margin-top: 50%;">
                     <a href="/">
                     @if(file_exists(public_path('uploads/logo.png')))
                         <img src="/uploads/logo.png" class="img-rounded" alt="Logo" width="150">
                     @else
-                       {{ config('app.name', 'ultimatePOS') }}
+                       {{-- {{ config('app.name', 'ultimatePOS') }} --}}
                     @endif 
                     </a>
                     <br/>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-7 col-sm-7 col-xs-12 right-col eq-height-col">
+            <div class="col-md-4 col-sm-4 col-xs-12 right-col eq-height-col">
                 <div class="row">
                 <div class="col-md-3 col-xs-4" style="text-align: left;">
                     <select class="form-control input-sm" id="change_lang" style="margin: 10px;">
@@ -64,7 +64,7 @@
                     @if(!($request->segment(1) == 'business' && $request->segment(2) == 'register'))
                         <!-- Register Url -->
                         @if(config('constants.allow_registration'))
-                            <a href="{{ route('business.getRegister') }}@if(!empty(request()->lang)){{'?lang=' . request()->lang}} @endif" class="btn bg-maroon btn-flat" ><b>{{ __('business.not_yet_registered')}}</b> {{ __('business.register_now') }}</a>
+                            {{-- <a href="{{ route('business.getRegister') }}@if(!empty(request()->lang)){{'?lang=' . request()->lang}} @endif" class="btn bg-maroon btn-flat" ><b>{{ __('business.not_yet_registered')}}</b> {{ __('business.register_now') }}</a> --}}
                             <!-- pricing url -->
                             @if(Route::has('pricing') && config('app.env') != 'demo' && $request->segment(1) != 'pricing')
                                 &nbsp; <a href="{{ action('\Modules\Superadmin\Http\Controllers\PricingController@index') }}">@lang('superadmin::lang.pricing')</a>
@@ -77,6 +77,13 @@
                 </div>
                 
                 @yield('content')
+                <footer class="footer footer-alt">
+                    <div class="text-center">
+                        <div class="copyright-text">
+                            <p class="mb-0 text-white"><script>document.write(new Date().getFullYear());</script> &copy; Powered By <a href="http://ultimate.pos/">Ultimate POS</a></p>
+                        </div>
+                    </div>
+                </footer>
                 </div>
             </div>
         </div>
