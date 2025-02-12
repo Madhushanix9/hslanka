@@ -11,7 +11,7 @@
 @endif
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1 class="gradient-text">{{$heading }}
+    <h1>{{$heading }}
         <small>
             {{ $module_category_data['sub_heading'] ?? __( 'category.manage_your_categories' ) }}
         </small>

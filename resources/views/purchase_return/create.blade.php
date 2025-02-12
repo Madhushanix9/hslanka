@@ -6,7 +6,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
 <br>
-    <h1 class="gradient-text">@lang('lang_v1.add_purchase_return')</h1>
+    <h1>@lang('lang_v1.add_purchase_return')</h1>
 </section>
 
 <!-- Main content -->

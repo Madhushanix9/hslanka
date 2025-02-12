@@ -6,7 +6,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-  <h1 class="gradient-text">@lang( 'user.add_user' )</h1>
+  <h1>@lang( 'user.add_user' )</h1>
 </section>
 
 <!-- Main content -->

@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1 class="gradient-text" >@lang('sale.products')
+    <h1 >@lang('sale.products')
         <small>@lang('lang_v1.manage_products')</small>
     </h1>
     <!-- <ol class="breadcrumb">

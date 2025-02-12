@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1 class="gradient-text">@lang( 'user.users' )
+    <h1>@lang( 'user.users' )
         <small>@lang( 'user.manage_users' )</small>
     </h1>
     <!-- <ol class="breadcrumb">

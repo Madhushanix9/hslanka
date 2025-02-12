@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1 class="gradient-text">@lang('lang_v1.add_selling_price_group_prices')</h1>
+    <h1>@lang('lang_v1.add_selling_price_group_prices')</h1>
 </section>
 
 <!-- Main content -->

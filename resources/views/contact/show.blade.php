@@ -7,7 +7,7 @@
 <section class="content no-print">
     <div class="row no-print">
         <div class="col-md-4">
-            <h3 class="gradient-text">@lang('contact.view_contact')</h3>
+            <h3>@lang('contact.view_contact')</h3>
         </div>
         <div class="col-md-4 col-xs-12 mt-15 pull-right">
             {!! Form::select('contact_id', $contact_dropdown, $contact->id , ['class' => 'form-control select2', 'id' => 'contact_id']); !!}
