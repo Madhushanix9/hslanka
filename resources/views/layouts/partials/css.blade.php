@@ -156,6 +156,15 @@
 	.btn-success{
 		color: #fff;	background: linear-gradient(90deg, #22d14eea 0%, rgb(65, 141, 42) 100%);
 	}
+
+	h1{
+		font-size: 24px;
+		font-weight: bold;
+		background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		display: inline-block;
+	}
 </style>
 @if(!empty($__system_settings['additional_css']))
     {!! $__system_settings['additional_css'] !!}
