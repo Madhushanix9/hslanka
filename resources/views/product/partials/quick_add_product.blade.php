@@ -31,7 +31,7 @@
             <div class="input-group">
               {!! Form::select('unit_id', $units, !empty($duplicate_product->unit_id) ? $duplicate_product->unit_id : session('business.default_unit'), ['class' => 'form-control select2', 'required']); !!}
               <span class="input-group-btn">
-                <button type="button" @if(!auth()->user()->can('unit.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('UnitController@create', ['quick_add' => true])}}" title="@lang('unit.add_unit')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+                <button type="button" @if(!auth()->user()->can('unit.create')) disabled @endif class="btn btn-flat btn-modal" data-href="{{action('UnitController@create', ['quick_add' => true])}}" title="@lang('unit.add_unit')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
               </span>
             </div>
           </div>
@@ -134,6 +134,18 @@
 
   </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
+
+<style>
+	.input-group-btn .btn-flat {
+		border-radius: 0 10px 10px 0 !important;
+	}
+	.select2-container--default .select2-selection--single {
+		border-top-left-radius: 0rem !important;
+		border-bottom-left-radius: 0rem !important;
+		border-top-right-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+	}
+	</style>
 
 <script type="text/javascript">
   $(document).ready(function(){

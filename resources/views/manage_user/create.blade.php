@@ -6,7 +6,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-  <h1>@lang( 'user.add_user' )</h1>
+  <h1 class="gradient-text">@lang( 'user.add_user' )</h1>
 </section>
 
 <!-- Main content -->
@@ -14,7 +14,7 @@
 {!! Form::open(['url' => action('ManageUserController@store'), 'method' => 'post', 'id' => 'user_add_form' ]) !!}
   <div class="row">
     <div class="col-md-12">
-  @component('components.widget')
+      @component('components.widget', ['class' => 'box-widget'])
       <div class="col-md-2">
         <div class="form-group">
           {!! Form::label('surname', __( 'business.prefix' ) . ':') !!}
@@ -55,7 +55,7 @@
   @endcomponent
   </div>
   <div class="col-md-12">
-    @component('components.widget', ['title' => __('lang_v1.roles_and_permissions')])
+    @component('components.widget', ['class' => 'box-widget','title' => __('lang_v1.roles_and_permissions')])
       <div class="col-md-4">
         <div class="form-group">
             <div class="checkbox">
@@ -132,7 +132,7 @@
   </div>
 
   <div class="col-md-12">
-    @component('components.widget', ['title' => __('sale.sells')])
+    @component('components.widget', ['class' => 'box-widget','title' => __('sale.sells')])
       <div class="col-md-4">
         <div class="form-group">
           {!! Form::label('cmmsn_percent', __( 'lang_v1.cmmsn_percent' ) . ':') !!} @show_tooltip(__('lang_v1.commsn_percent_help'))
@@ -181,7 +181,7 @@
     @endif
   <div class="row">
     <div class="col-md-12 text-center">
-      <button type="submit" class="btn btn-primary btn-big" id="submit_user_button">@lang( 'messages.save' )</button>
+      <button type="submit" class="btn btn-primary btn-big" id="submit_user_button" style="	background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);">@lang( 'messages.save' )</button>
     </div>
   </div>
 {!! Form::close() !!}

@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header no-print">
-    <h1>@lang('lang_v1.purchase_return')
+    <h1 class="gradient-text">@lang('lang_v1.purchase_return')
     </h1>
 </section>
 

@@ -1,5 +1,5 @@
 <div class="modal-dialog" role="document">
-  <div class="modal-content">
+  <div class="modal-content rounded-modal-content">
 
     {!! Form::open(['url' => action('SalesCommissionAgentController@update', [$user->id]), 'method' => 'PUT', 'id' => 'sale_commission_agent_form' ]) !!}
 
@@ -59,11 +59,23 @@
     </div>
 
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">@lang( 'messages.save' )</button>
-      <button type="button" class="btn btn-default" data-dismiss="modal">@lang( 'messages.close' )</button>
+      <button type="submit" class="btn btn-primary btn-submit">@lang( 'messages.save' )</button>
+      <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">@lang( 'messages.close' )</button>
     </div>
 
     {!! Form::close() !!}
 
   </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
+
+<style>
+  .rounded-modal-content {
+		border-radius: 15px;
+	}
+  .btn-submit{
+    background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+  }
+  .btn-cancel{
+    color: #fff;	background: linear-gradient(90deg, #610404 0%, rgb(163, 21, 33) 100%);
+  }
+</style>

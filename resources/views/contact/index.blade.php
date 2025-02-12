@@ -11,14 +11,14 @@
 @section('content')
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1> @lang('lang_v1.'.$type.'s')
+    <h1 class="gradient-text"> @lang('lang_v1.'.$type.'s')
         <small>@lang( 'contact.manage_your_contact', ['contacts' =>  __('lang_v1.'.$type.'s') ])</small>
     </h1>
 </section>
 
 <!-- Main content -->
 <section class="content">
-    @component('components.filters', ['title' => __('report.filters')])
+    @component('components.filters', ['class' => 'box-filter', 'title' => __('report.filters')])
     @if($type == 'customer')
         <div class="col-md-3">
             <div class="form-group">

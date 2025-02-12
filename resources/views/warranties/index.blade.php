@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang('lang_v1.warranties')
+    <h1 class="gradient-text">@lang('lang_v1.warranties')
     </h1>
 </section>
 

@@ -134,8 +134,10 @@
 		</div>
 	</div>
 	@endcomponent
-	<div class="col-sm-12 text-center">
-		<button type="submit" class="btn btn-primary btn-big">@lang('messages.save')</button>
+	<div class="row">
+		<div class="col-sm-12 text-center">
+			<button type="submit" class="btn btn-primary btn-big">@lang('messages.save')</button>
+		</div>
 	</div>
 {!! Form::close() !!}
 </section>
