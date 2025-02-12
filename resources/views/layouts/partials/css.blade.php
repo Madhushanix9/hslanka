@@ -75,7 +75,7 @@
 	margin: 10px 10px 10px 250px;
 	}
 
-	h1.gradient-text {
+	.gradient-text {
 		font-size: 24px;
 		font-weight: bold;
 		background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
@@ -136,6 +136,22 @@
 	}
 	.btn-default{
 		color: #fff;	background: linear-gradient(90deg, #610404 0%, rgb(163, 21, 33) 100%);
+	}
+
+	.modal-content {
+		border-radius: 15px;
+	}
+	.btn-primary{
+		background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+	}
+	.btn-cancel{
+		color: #fff;	background: linear-gradient(90deg, #610404 0%, rgb(163, 21, 33) 100%);
+	}
+	.btn-info{
+		background: linear-gradient(90deg, #3b80ee 0%, rgb(52, 162, 202) 100%);
+	}
+	.btn-danger{
+		color: #fff;	background: linear-gradient(90deg, #d12222ea 0%, rgb(141, 42, 50) 100%);
 	}
 </style>
 @if(!empty($__system_settings['additional_css']))
