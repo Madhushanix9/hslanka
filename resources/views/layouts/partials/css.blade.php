@@ -153,6 +153,9 @@
 	.btn-danger{
 		color: #fff;	background: linear-gradient(90deg, #d12222ea 0%, rgb(141, 42, 50) 100%);
 	}
+	.btn-success{
+		color: #fff;	background: linear-gradient(90deg, #22d14eea 0%, rgb(65, 141, 42) 100%);
+	}
 </style>
 @if(!empty($__system_settings['additional_css']))
     {!! $__system_settings['additional_css'] !!}
