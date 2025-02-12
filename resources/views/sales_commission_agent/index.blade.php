@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang( 'lang_v1.sales_commission_agents' )
+    <h1 class="gradient-text">@lang( 'lang_v1.sales_commission_agents' )
     </h1>
 </section>
 
@@ -15,7 +15,7 @@
         @can('user.create')
             @slot('tool')
                 <div class="box-tools">
-                    <button type="button" class="btn btn-primary btn-modal pull-right"
+                    <button type="button" class="btn btn-primary btn-modal pull-right btn-block "
                         data-href="{{action('SalesCommissionAgentController@create')}}" data-container=".commission_agent_modal"><i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                 </div>
             @endslot

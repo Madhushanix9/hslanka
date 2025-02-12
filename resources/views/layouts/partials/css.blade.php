@@ -75,6 +75,59 @@
 	margin: 10px 10px 10px 250px;
 	}
 
+	h1.gradient-text {
+		font-size: 24px;
+		font-weight: bold;
+		background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		display: inline-block;
+	}
+
+	.btn-block{
+		background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+		border-radius: 5px;
+	}
+	.table thead th {
+		background-color: #042761;
+		color: white;  
+		text-align: center;     
+		padding: 10px; 
+		border-color: #dddddd; 
+	}
+
+	/* Style the search box */
+	.dataTables_filter input {
+		width: 250px; 
+		padding: 8px 12px;
+		border: 2px solid #0d52c2;
+		border-radius: 5px;
+		outline: none;
+		font-size: 14px;
+	}
+
+	.dataTables_filter input:focus {
+		border-color: #042761; 
+		box-shadow: 0 0 5px #031e4b;
+	}
+
+	.box-primary {
+		border-radius: 30px;
+
+	}
+	.box-primary .box-title {
+		font-weight: bold;
+	}
+	.box-filter {
+		border-radius: 30px;
+
+	}
+
+	.box-widget {
+		border-radius: 30px;
+	}
+
+
 </style>
 @if(!empty($__system_settings['additional_css']))
     {!! $__system_settings['additional_css'] !!}

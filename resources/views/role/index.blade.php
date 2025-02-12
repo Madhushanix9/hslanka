@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang( 'user.roles' )
+    <h1 class="gradient-text">@lang( 'user.roles' )
         <small>@lang( 'user.manage_roles' )</small>
     </h1>
     <!-- <ol class="breadcrumb">
