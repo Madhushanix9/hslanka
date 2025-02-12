@@ -127,7 +127,16 @@
 		border-radius: 30px;
 	}
 
-
+	h4.gradient-model {
+			font-weight: bold;
+			background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			display: inline-block;
+	}
+	.btn-default{
+		color: #fff;	background: linear-gradient(90deg, #610404 0%, rgb(163, 21, 33) 100%);
+	}
 </style>
 @if(!empty($__system_settings['additional_css']))
     {!! $__system_settings['additional_css'] !!}
