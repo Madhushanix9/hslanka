@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang('sale.products')
+    <h1 class="gradient-text" >@lang('sale.products')
         <small>@lang('lang_v1.manage_products')</small>
     </h1>
     <!-- <ol class="breadcrumb">
@@ -18,7 +18,7 @@
 <section class="content">
 <div class="row">
     <div class="col-md-12">
-    @component('components.filters', ['title' => __('report.filters')])
+    @component('components.filters', ['class' => 'box-filter', 'title' => __('report.filters')])
         <div class="col-md-3">
             <div class="form-group">
                 {!! Form::label('type', __('product.product_type') . ':') !!}

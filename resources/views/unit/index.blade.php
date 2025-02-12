@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang( 'unit.units' )
+    <h1 class="gradient-text">@lang( 'unit.units' )
         <small>@lang( 'unit.manage_your_units' )</small>
     </h1>
     <!-- <ol class="breadcrumb">

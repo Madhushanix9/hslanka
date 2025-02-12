@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang('lang_v1.add_opening_stock')</h1>
+    <h1 class="gradient-text">@lang('lang_v1.add_opening_stock')</h1>
 </section>
 
 <!-- Main content -->

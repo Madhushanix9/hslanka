@@ -127,7 +127,7 @@
 		border-radius: 30px;
 	}
 
-	h4.gradient-model {
+	.modal-title {
 			font-weight: bold;
 			background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
 			-webkit-background-clip: text;

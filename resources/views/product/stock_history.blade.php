@@ -5,14 +5,14 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang('lang_v1.product_stock_history')</h1>
+    <h1 class="gradient-text">@lang('lang_v1.product_stock_history')</h1>
 </section>
 
 <!-- Main content -->
 <section class="content">
 <div class="row">
     <div class="col-md-12">
-    @component('components.widget', ['title' => $product->name])
+    @component('components.widget', ['class' => 'box-widget','title' => $product->name])
         <div class="col-md-6">
             <div class="form-group">
                 {!! Form::label('product_id',  __('sale.product') . ':') !!}
@@ -40,7 +40,7 @@
             <input type="hidden" id="variation_id" name="variation_id" value="{{$product->variations->first()->id}}">
         @endif
     @endcomponent
-    @component('components.widget')
+    @component('components.widget', ['class' => 'box-widget'])
         <div id="product_stock_history" style="display: none;"></div>
     @endcomponent
     </div>
