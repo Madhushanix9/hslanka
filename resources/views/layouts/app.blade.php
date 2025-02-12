@@ -32,8 +32,8 @@
         @yield('css')
     </head>
 
-    <body class="@if($pos_layout) hold-transition lockscreen @else hold-transition skin-@if(!empty(session('business.theme_color'))){{session('business.theme_color')}}@else{{'blue-light'}}@endif sidebar-mini @endif">
-        <div class="wrapper thetop">
+    <body class="@if($pos_layout) hold-transition lockscreen @else hold-transition skin-@if(!empty(session('business.theme_color'))){{session('business.theme_color')}}@else{{'blue-light'}}@endif sidebar-mini @endif" >
+        <div class="wrapper thetop" style="background-image: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%); padding-bottom: 10px;">
             <script type="text/javascript">
                 if(localStorage.getItem("upos_sidebar_collapse") == 'true'){
                     var body = document.getElementsByTagName("body")[0];

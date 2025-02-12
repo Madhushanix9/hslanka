@@ -69,6 +69,12 @@
 	  -webkit-transform: rotate(315deg);
 	  transform: rotate(315deg);
 	}
+
+	.content-wrapper {
+	border-radius: 20px;
+	margin: 10px 10px 10px 250px;
+	}
+
 </style>
 @if(!empty($__system_settings['additional_css']))
     {!! $__system_settings['additional_css'] !!}
