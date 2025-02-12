@@ -31,6 +31,38 @@
 
         @yield('css')
     </head>
+    
+    <style>
+        .form-control{
+            border-radius: 1rem;
+        }
+
+        .input-group .input-group-addon {
+            border-top-left-radius: 1rem!important;
+            border-bottom-left-radius: 1rem!important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border-radius: 1rem !important;
+        }
+
+        .select2-container--default.select2-container--focus{
+
+            border: 0.3px #3c8dbc solid !important;
+            border-radius: 1rem !important;
+            transition: border-color ease-in-out .15s,
+            box-shadow ease-in-out .15s !important;
+        }
+
+        .modal-content .select2-container--default .select2-selection--single {
+            border-top-left-radius: 0rem !important;
+            border-bottom-left-radius: 0rem !important;
+        }
+
+        .input-group .form-control:first-child{
+            border-radius: 1rem !important;
+        }
+    </style>
 
     <body class="@if($pos_layout) hold-transition lockscreen @else hold-transition skin-@if(!empty(session('business.theme_color'))){{session('business.theme_color')}}@else{{'blue-light'}}@endif sidebar-mini @endif" >
         <div class="wrapper thetop" style="background-image: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%); padding-bottom: 10px;">
