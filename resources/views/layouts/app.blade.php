@@ -62,6 +62,17 @@
         .input-group .form-control:first-child{
             border-radius: 1rem !important;
         }
+
+        table.dataTable tbody {
+            color: #909098;
+            font-family: "Quicksand", sans-serif;
+        }
+
+        table.dataTable thead {
+            color: #4b4b4b;
+            font-family: "Quicksand", sans-serif;
+        }
+
     </style>
 
     <body class="@if($pos_layout) hold-transition lockscreen @else hold-transition skin-@if(!empty(session('business.theme_color'))){{session('business.theme_color')}}@else{{'blue-light'}}@endif sidebar-mini @endif" >
