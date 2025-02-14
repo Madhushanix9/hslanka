@@ -237,7 +237,7 @@
 				data-msg_max_default="@lang('validation.custom-messages.quantity_not_available', ['qty'=> $product->formatted_qty_available, 'unit' => $product->unit  ])" 
 			@endif 
 		>
-		<span class="input-group-btn"><button type="button" class="btn btn-flat quantity-up"><i class="fa fa-car text-success"></i></button></span>
+		<span class="input-group-btn"><button type="button" class="btn btn-flat quantity-up"><i class="fa fa-plus text-success"></i></button></span>
 		</div>
 		
 		<input type="hidden" name="products[{{$row_count}}][product_unit_id]" value="{{$product->unit_id}}">

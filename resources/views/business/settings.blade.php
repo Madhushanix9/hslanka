@@ -10,6 +10,30 @@
     @include('layouts.partials.search_settings')
 </section>
 
+<style>
+    .select2-container--default .select2-selection--single {
+        border-top-left-radius: 0rem !important;
+        border-bottom-left-radius: 0rem !important;
+        border-top-right-radius: 1rem !important;
+        border-bottom-right-radius: 1rem !important;
+    }
+    #select_filed + .select2-container--default .select2-selection--single,
+    #product_sku_length + .select2-container--default .select2-selection--single,
+    #qty_length + .select2-container--default .select2-selection--single,
+    #qty_length_decimal + .select2-container--default .select2-selection--single,
+    #default_datatable_page_entries + .select2-container--default .select2-selection--single{
+        border-top-left-radius: 1rem !important;
+        border-bottom-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+        border-bottom-right-radius: 1rem !important;
+    }
+    .left_round {
+        border-top-left-radius: 0rem !important;
+        border-bottom-left-radius: 0rem !important;
+        border-top-right-radius: 1rem !important;
+        border-bottom-right-radius: 1rem !important;
+    }
+</style>
 <!-- Main content -->
 <section class="content">
 {!! Form::open(['url' => action('BusinessController@postBusinessSettings'), 'method' => 'post', 'id' => 'bussiness_edit_form',

@@ -78,7 +78,7 @@
 	.gradient-text {
 		font-size: 24px;
 		font-weight: bold;
-		background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+		background: #0967BE;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		display: inline-block;
@@ -123,35 +123,43 @@
 
 	}
 
-	.box-widget {
+	.box-widget,
+	.box-solid {
 		border-radius: 30px;
 	}
 
 	.modal-title {
 			font-weight: bold;
-			background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+			background: #0967BE;
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			display: inline-block;
 	}
 	.btn-default{
-		color: #fff;	background: linear-gradient(90deg, #610404 0%, rgb(163, 21, 33) 100%);
+		color: #fff;	
+		background: #9e2731;
+
 	}
 
 	.modal-content {
 		border-radius: 15px;
 	}
 	.btn-primary{
-		background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);
+		background: #053177;
 	}
 	.btn-cancel{
-		color: #fff;	background: linear-gradient(90deg, #610404 0%, rgb(163, 21, 33) 100%);
+		color: #fff;	
+		background: #b4b4b4;
+		border-radius: 4px;
+
+
 	}
 	.btn-info{
 		background: linear-gradient(90deg, #3b80ee 0%, rgb(52, 162, 202) 100%);
 	}
 	.btn-danger{
-		color: #fff;	background: linear-gradient(90deg, #d12222ea 0%, rgb(141, 42, 50) 100%);
+		color: #fff;	
+		background: #bd2e3a;
 	}
 	.btn-success{
 		color: #fff;	background: linear-gradient(90deg, #22d14eea 0%, rgb(65, 141, 42) 100%);

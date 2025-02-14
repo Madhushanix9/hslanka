@@ -47,7 +47,7 @@
         <div class="col-sm-4">
             <div class="form-group">
                 {!! Form::label('item_addition_method', __('lang_v1.sales_item_addition_method') . ':') !!}
-                {!! Form::select('item_addition_method', [ 0 => __('lang_v1.add_item_in_new_row'), 1 =>  __('lang_v1.increase_item_qty')], $business->item_addition_method, ['class' => 'form-control select2', 'style' => 'width: 100%;']); !!}
+                {!! Form::select('item_addition_method', [ 0 => __('lang_v1.add_item_in_new_row'), 1 =>  __('lang_v1.increase_item_qty')], $business->item_addition_method, ['class' => 'form-control select2', 'id' =>'select_filed', 'style' => 'width: 100%;']); !!}
             </div>
         </div>
         <div class="clearfix"></div>
@@ -61,7 +61,7 @@
                     '0.1' =>  __('lang_v1.round_to_nearest_decimal', ['multiple' => 0.1]),
                     '0.5' =>  __('lang_v1.round_to_nearest_decimal', ['multiple' => 0.5])
                 ], 
-                !empty($pos_settings['amount_rounding_method']) ? $pos_settings['amount_rounding_method'] : null, ['class' => 'form-control select2', 'style' => 'width: 100%;', 'placeholder' => __('lang_v1.none')]); !!}
+                !empty($pos_settings['amount_rounding_method']) ? $pos_settings['amount_rounding_method'] : null, ['class' => 'form-control select2','id' =>'select_filed', 'style' => 'width: 100%;', 'placeholder' => __('lang_v1.none')]); !!}
             </div>
         </div>
 

@@ -7,7 +7,20 @@
 <section class="content-header">
     <h1>{{ __('lang_v1.product_purchase_report')}}</h1>
 </section>
-
+<style>
+    .select2-container--default .select2-selection--single {
+    border-top-left-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+    border-top-right-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
+#ppr_brand_id + .select2-container--default .select2-selection--single {
+    border-top-left-radius: 1rem !important;
+    border-bottom-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
+</style>
 <!-- Main content -->
 <section class="content">
     <div class="row">
@@ -59,7 +72,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     {!! Form::label('ppr_brand_id', __('product.brand').':') !!}
-                    {!! Form::select('ppr_brand_id', $brands, null, ['class' => 'form-control select2', 'placeholder' => __('lang_v1.all')]); !!}
+                    {!! Form::select('ppr_brand_id', $brands, null, ['class' => 'form-control select2', 'id'=> 'ppr_brand_id','placeholder' => __('lang_v1.all')]); !!}
                 </div>
             </div>
             {!! Form::close() !!}

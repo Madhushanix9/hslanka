@@ -15,6 +15,49 @@
 @endphp
 
 @section('title', $title)
+<style>
+	.input-group-btn .btn-flat {
+    border-radius: 0 10px 10px 0 !important;
+}
+
+.form-group .select2-container--default .select2-selection--single {
+    border-top-left-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+#weighing_scale_btn{
+	border-top-left-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+#configure_search_btn{
+	border-top-left-radius: 1rem !important;
+    border-bottom-left-radius: 1rem !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+#right_round{
+	border-top-left-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+    border-top-right-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
+#left_round{
+	border-top-left-radius: 1rem !important;
+    border-bottom-left-radius: 1rem !important;
+    border-top-right-radius: 0rem !important;
+    border-bottom-right-radius: 0rem !important;
+}
+.btn.add_new_customer,
+ .btn.pos_add_quick_product,
+ .btn.configure_product_btn{
+    padding: 9px 9px; 
+}
+
+</style>
 
 @section('content')
 <!-- Content Header (Page header) -->
@@ -41,7 +84,7 @@
 			{!! Form::select('select_location_id', $business_locations, $default_location->id ?? null, ['class' => 'form-control input-sm',
 			'id' => 'select_location_id', 
 			'required', 'autofocus'], $bl_attributes); !!}
-			<span class="input-group-addon">
+			<span class="input-group-addon" id="right_round"
 					@show_tooltip(__('tooltip.sale_location'))
 				</span> 
 			</div>
@@ -61,7 +104,7 @@
 	 @endif
 	<div class="row">
 		<div class="col-md-12 col-sm-12">
-			@component('components.widget', ['class' => 'box-solid'])
+			@component('components.widget', ['class' => 'box-widget'])
 				{!! Form::hidden('location_id', !empty($default_location) ? $default_location->id : null , ['id' => 'location_id', 'data-receipt_printer_type' => !empty($default_location->receipt_printer_type) ? $default_location->receipt_printer_type : 'browser', 'data-default_payment_accounts' => !empty($default_location) ? $default_location->default_payment_accounts : '']); !!}
 
 				@if(!empty($price_groups))
@@ -77,8 +120,8 @@
 										$selected_price_group = !empty($default_price_group_id) && array_key_exists($default_price_group_id, $price_groups) ? $default_price_group_id : null;
 									@endphp
 									{!! Form::hidden('hidden_price_group', key($price_groups), ['id' => 'hidden_price_group']) !!}
-									{!! Form::select('price_group', $price_groups, $selected_price_group, ['class' => 'form-control select2', 'id' => 'price_group']); !!}
-									<span class="input-group-addon">
+									{!! Form::select('price_group', $price_groups, $selected_price_group, ['class' => 'form-control select2 ', 'id' => 'price_group']); !!}
+									<span class="input-group-addon" id="right_round">
 										@show_tooltip(__('lang_v1.price_group_help_text'))
 									</span> 
 								</div>
@@ -106,7 +149,7 @@
 
 								{!! Form::hidden('types_of_service_price_group', null, ['id' => 'types_of_service_price_group']) !!}
 
-								<span class="input-group-addon">
+								<span class="input-group-addon" id="right_round">
 									@show_tooltip(__('lang_v1.types_of_service_help'))
 								</span> 
 							</div>
@@ -146,7 +189,7 @@
 							{!! Form::select('contact_id', 
 								[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required']); !!}
 							<span class="input-group-btn">
-								<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+								<button type="button" class="btn btn-flat add_new_customer" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 							</span>
 						</div>
 						<small class="text-danger hide contact_due_text"><strong>@lang('account.customer_due'):</strong> <span></span></small>
@@ -165,11 +208,7 @@
 			
 					</small>
 				</div>
-
-				<div class="col-md-3">
-
-		        </div>
-
+	
 				@if(!empty($commission_agent))
 				@php
 					$is_commission_agent_required = !empty($pos_settings['is_commission_agent_required']);
@@ -203,12 +242,8 @@
 					<div class="@if(!empty($commission_agent)) col-sm-3 @else col-sm-4 @endif">
 						<div class="form-group">
 							{!! Form::label('status', __('sale.status') . ':*') !!}
-							{!! Form::select('status', $statuses, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+							{!! Form::select('status', $statuses,null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
 						</div>
-						
-						
-						
-						
 					</div>
 				@endif
 
@@ -309,19 +344,19 @@
 		        @endif
 			@endcomponent
 
-			@component('components.widget', ['class' => 'box-solid'])
+			@component('components.widget', ['class' => 'box-widget'])
 				<div class="col-sm-10 col-sm-offset-1">
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-btn">
-								<button type="button" class="btn btn-default bg-white btn-flat" data-toggle="modal" data-target="#configure_search_modal" title="{{__('lang_v1.configure_product_search')}}"><i class="fas fa-search-plus"></i></button>
+								<button type="button" class="btn btn-flat configure_product_btn" id="left_round" data-toggle="modal" data-target="#configure_search_modal" title="{{__('lang_v1.configure_product_search')}}"><i class="fas fa-search-plus"></i></button>
 							</div>
 							{!! Form::text('search_product', null, ['class' => 'form-control mousetrap', 'id' => 'search_product', 'placeholder' => __('lang_v1.search_product_placeholder'),
 							'disabled' => is_null($default_location)? true : false,
 							'autofocus' => is_null($default_location)? false : true,
 							]); !!}
 							<span class="input-group-btn">
-								<button type="button" class="btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{action('ProductController@quickAdd')}}" data-container=".quick_add_product_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+								<button type="button" class="btn  btn-flat pos_add_quick_product" id ="right_round" data-href="{{action('ProductController@quickAdd')}}" data-container=".quick_add_product_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 							</span>
 						</div>
 					</div>
@@ -396,7 +431,7 @@
 					</div>
 				</div>
 			@endcomponent
-			@component('components.widget', ['class' => 'box-solid'])
+			@component('components.widget', ['class' => 'box-widget'])
 				<div class="col-md-4  @if($sale_type == 'sales_order') hide @endif">
 			        <div class="form-group">
 			            {!! Form::label('discount_type', __('sale.discount_type') . ':*' ) !!}
@@ -466,7 +501,7 @@
 
 				<input type="hidden" name="is_direct_sale" value="1">
 			@endcomponent
-			@component('components.widget', ['class' => 'box-solid'])
+			@component('components.widget', ['class' => 'box-widget'])
 
 	        <div class="clearfix"></div>
 
