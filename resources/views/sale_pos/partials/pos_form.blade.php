@@ -138,7 +138,7 @@
 
 					{!! Form::hidden('types_of_service_price_group', null, ['id' => 'types_of_service_price_group']) !!}
 
-					<span class="input-group-addon">
+					<span class="input-group-addon" id="price_group">
 						@show_tooltip(__('lang_v1.types_of_service_help'))
 					</span> 
 				</div>

@@ -6,7 +6,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>@lang('business.business_settings')</h1>
-    <br>
+    <br><br>
     @include('layouts.partials.search_settings')
 </section>
 
