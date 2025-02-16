@@ -13,11 +13,16 @@
         <!-- Fonts -->
         <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,600" rel="stylesheet" type="text/css"> -->
         
-        <link rel="stylesheet" href="{{ asset('css/vendor.css') }}">
-
+        {{-- <link rel="stylesheet" href="{{ asset('css/vendor.css'}"> --}}
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link href="{{ asset('libs/tiny-slider/tiny-slider.css') }}" rel="stylesheet">
+        <link href="{{ asset('libs/tobii/css/tobii.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('libs/%40mdi/font/css/materialdesignicons.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('libs/%40iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/custom/style.css') }}">
         <!-- Styles -->
         <style>
-            body {
+            /* body {
                 min-height: 100vh;
                 background-color: #243949;
                 color: #nnn;
@@ -40,20 +45,25 @@
             }
             .navbar-default .navbar-brand {
                 color: #ccc;
-            }
+            } */
         </style>
     </head>
 
     <body>
-        @include('layouts.partials.home_header')
-        <div class="container">
-            <div class="content">
-                @yield('content')
-            </div>
-        </div>
+        @include('layouts.partials.home_header2')
+        @yield('content')
         @include('layouts.partials.javascripts')
-
+       
     <!-- Scripts -->
+    <script src="{{ asset('libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- SLIDER -->
+    <script src="{{ asset('libs/tiny-slider/min/tiny-slider.js') }}"></script>
+    <!-- Lightbox -->
+    <script src="{{ asset('libs/tobii/js/tobii.min.js') }}"></script>
+    <!-- Main Js -->
+    <script src="{{ asset('libs/feather-icons/feather.min.js') }} assets"></script>
+    <script src="{{ asset('js/custom/plugins.init.js') }}"></script><!--Note: All init js like tiny slider, counter, countdown, maintenance, lightbox, gallery, swiper slider, aos animation etc.-->
+    <script src="{{ asset('js/custom/app.js') }}"></script><!--Not
     <script src="{{ asset('js/login.js?v=' . $asset_v) }}"></script>
     @yield('javascript')
     </body>
