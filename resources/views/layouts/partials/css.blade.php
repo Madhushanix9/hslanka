@@ -89,7 +89,7 @@
 		border-radius: 5px;
 	}
 	.table thead th {
-		background-color: #042761;
+		background-color: #0c3d76;
 		color: white;  
 		text-align: center;     
 		padding: 10px; 
