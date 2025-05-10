@@ -7,7 +7,14 @@
 <section class="content-header">
     <h1>{{ __('lang_v1.purchase_payment_report')}}</h1>
 </section>
-
+<style>
+    .select2-container--default .select2-selection--single {
+    border-top-left-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+    border-top-right-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
+</style>
 <!-- Main content -->
 <section class="content">
     <div class="row">

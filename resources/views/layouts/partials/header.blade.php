@@ -1,14 +1,14 @@
 @inject('request', 'Illuminate\Http\Request')
 <!-- Main Header -->
   <header class="main-header no-print">
-    <a href="{{route('home')}}" class="logo">
+    <a href="{{route('home')}}" class="logo" style="background: #042761; !important">
       
       <span class="logo-lg">{{ Session::get('business.name') }} <i class="fa fa-circle text-success" id="online_indicator"></i></span> 
 
     </a>
 
     <!-- Header Navbar -->
-    <nav class="navbar navbar-static-top" role="navigation">
+    <nav class="navbar navbar-static-top" role="navigation" style="background-image: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%); padding-bottom: 10px;">
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         &#9776;
@@ -22,7 +22,7 @@
         @if(!empty(session('previous_user_id')) && !empty(session('previous_username')))
             <a href="{{route('sign-in-as-user', session('previous_user_id'))}}" class="btn btn-flat btn-danger m-8 btn-sm mt-10"><i class="fas fa-undo"></i> @lang('lang_v1.back_to_username', ['username' => session('previous_username')] )</a>
         @endif
-
+          <div class="m-8 pull-left mt-15 hidden-xs" style="color: #fff;"><strong>{{ @format_date('now') }}</strong></div>
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
 
@@ -31,7 +31,7 @@
         @endif
 
         <div class="btn-group">
-          <button id="header_shortcut_dropdown" type="button" class="btn btn-success dropdown-toggle btn-flat pull-left m-8 btn-sm mt-10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button id="header_shortcut_dropdown" type="button" class="btn btn-success dropdown-toggle btn-flat pull-left m-8 btn-sm mt-10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background-image: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);">
             <i class="fas fa-plus-circle fa-lg"></i>
           </button>
           <ul class="dropdown-menu">
@@ -53,7 +53,7 @@
             @endif
           </ul>
         </div>
-        <button id="btnCalculator" title="@lang('lang_v1.calculator')" type="button" class="btn btn-success btn-flat pull-left m-8 btn-sm mt-10 popover-default hidden-xs" data-toggle="popover" data-trigger="click" data-content='@include("layouts.partials.calculator")' data-html="true" data-placement="bottom">
+        <button id="btnCalculator" title="@lang('lang_v1.calculator')" type="button" class="btn btn-success btn-flat pull-left m-8 btn-sm mt-10 popover-default hidden-xs" data-toggle="popover" data-trigger="click" data-content='@include("layouts.partials.calculator")' data-html="true" data-placement="bottom" style="border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background-image: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);">
             <strong><i class="fa fa-calculator fa-lg" aria-hidden="true"></i></strong>
         </button>
         
@@ -74,9 +74,9 @@
 
         @if(in_array('pos_sale', $enabled_modules))
           @can('sell.create')
-            <a href="{{action('SellPosController@create')}}" title="@lang('sale.pos_sale')" data-toggle="tooltip" data-placement="bottom" class="btn btn-flat pull-left m-8 btn-sm mt-10 btn-success">
-              <strong><i class="fa fa-th-large"></i> &nbsp; @lang('sale.pos_sale')</strong>
-            </a>
+          <a href="{{action('SellPosController@create')}}" title="@lang('sale.pos_sale')" data-toggle="tooltip" data-placement="bottom" class="btn btn-flat pull-left m-8 btn-sm mt-10 btn-success" style="border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background-image: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);">
+            <strong><i class="fa fa-desktop fa-lg"></i></strong>
+         </a>
           @endcan
         @endif
 
@@ -85,12 +85,11 @@
         @endif
 
         @can('profit_loss_report.view')
-          <button type="button" id="view_todays_profit" title="{{ __('home.todays_profit') }}" data-toggle="tooltip" data-placement="bottom" class="btn btn-success btn-flat pull-left m-8 btn-sm mt-10">
+          <button type="button" id="view_todays_profit" title="{{ __('home.todays_profit') }}" data-toggle="tooltip" data-placement="bottom" class="btn btn-success btn-flat pull-left m-8 btn-sm mt-10" style="border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background-image: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);">
             <strong><i class="fas fa-money-bill-alt fa-lg"></i></strong>
           </button>
         @endcan
 
-        <div class="m-8 pull-left mt-15 hidden-xs" style="color: #fff;"><strong>{{ @format_date('now') }}</strong></div>
 
         <ul class="nav navbar-nav">
           @include('layouts.partials.header-notifications')

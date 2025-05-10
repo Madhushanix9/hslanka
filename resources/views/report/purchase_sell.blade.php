@@ -9,7 +9,14 @@
         <small>@lang( 'report.purchase_sell_msg' )</small>
     </h1>
 </section>
-
+<style>
+    .select2-container--default .select2-selection--single {
+    border-top-left-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+    border-top-right-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
+</style>
 <!-- Main content -->
 <section class="content">
     <div class="print_section"><h2>{{session()->get('business.name')}} - @lang( 'report.purchase_sell' )</h2></div>

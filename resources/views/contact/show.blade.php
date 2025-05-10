@@ -44,7 +44,7 @@
     <br>
     <div class="row">
         <div class="col-md-12">
-            <div class="box box-solid">
+            <div class="box box-solid" style="border-radius: 30px;">
                 <div class="box-body">
                     @include('contact.partials.contact_info_tab')
                 </div>

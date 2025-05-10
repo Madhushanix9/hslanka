@@ -18,7 +18,7 @@
 
 <!-- Main content -->
 <section class="content">
-    @component('components.filters', ['title' => __('report.filters')])
+    @component('components.filters', ['class' => 'box-filter', 'title' => __('report.filters')])
     @if($type == 'customer')
         <div class="col-md-3">
             <div class="form-group">

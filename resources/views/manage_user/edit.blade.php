@@ -14,7 +14,7 @@
     {!! Form::open(['url' => action('ManageUserController@update', [$user->id]), 'method' => 'PUT', 'id' => 'user_edit_form' ]) !!}
     <div class="row">
         <div class="col-md-12">
-        @component('components.widget', ['class' => 'box-primary'])
+        @component('components.widget', ['class' => 'box-widget'])
             <div class="col-md-2">
                 <div class="form-group">
                   {!! Form::label('surname', __( 'business.prefix' ) . ':') !!}
@@ -56,7 +56,7 @@
         @endcomponent
         </div>
         <div class="col-md-12">
-        @component('components.widget', ['title' => __('lang_v1.roles_and_permissions')])
+        @component('components.widget', ['class' => 'box-widget','title' => __('lang_v1.roles_and_permissions')])
             <div class="col-md-4">
                 <div class="form-group">
                     <div class="checkbox">
@@ -137,7 +137,7 @@
         </div>
 
         <div class="col-md-12">
-            @component('components.widget', ['title' => __('sale.sells')])
+            @component('components.widget', ['class' => 'box-widget','title' => __('sale.sells')])
 
             <div class="col-md-4">
                 <div class="form-group">
@@ -187,7 +187,7 @@
     @endif
     <div class="row">
         <div class="col-md-12 text-center">
-            <button type="submit" class="btn btn-primary btn-big" id="submit_user_button">@lang( 'messages.update' )</button>
+            <button type="submit" class="btn btn-primary btn-big" id="submit_user_button" style="	background: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);">@lang( 'messages.update' )</button>
         </div>
     </div>
     {!! Form::close() !!}

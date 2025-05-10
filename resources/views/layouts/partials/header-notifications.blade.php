@@ -5,8 +5,8 @@
 @endphp
 <!-- Notifications: style can be found in dropdown.less -->
 <li class="dropdown notifications-menu">
-  <a href="#" class="dropdown-toggle load_notifications" data-toggle="dropdown" id="show_unread_notifications" data-loaded="false">
-    <i class="fas fa-bell"></i>
+  <a href="#"class="dropdown-toggle load_notifications btn btn-flat pull-left m-8 btn-sm mt-10 btn-success" style="border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background-image: linear-gradient(90deg, #042761 0%, rgba(4,153,209,1) 100%);" data-toggle="dropdown" id="show_unread_notifications" data-loaded="false">
+    <i class="fas fa-bell fa-lg"></i>
     <span class="label label-warning notifications_count">@if(!empty($total_unread)){{$total_unread}}@endif</span>
   </a>
   <ul class="dropdown-menu">

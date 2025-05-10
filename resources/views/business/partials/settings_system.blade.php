@@ -4,7 +4,7 @@
             <div class="form-group">
                 {!! Form::label('theme_color', __('lang_v1.theme_color')); !!}
                 {!! Form::select('theme_color', $theme_colors,   $business->theme_color, 
-                    ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'style' => 'width: 100%;']); !!}
+                    ['class' => 'form-control select2', 'id' =>'select_filed','placeholder' => __('messages.please_select'), 'style' => 'width: 100%;']); !!}
             </div>
         </div>
         <div class="col-sm-4">

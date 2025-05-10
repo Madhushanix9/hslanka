@@ -8,12 +8,20 @@
     <h1>@lang( 'report.stock_adjustment_report' )
     </h1>
 </section>
+<style>
+    .select2-container--default .select2-selection--single {
+    border-top-left-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+    border-top-right-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
 
+</style>
 <!-- Main content -->
 <section class="content">
     <div class="row">
         <div class="col-md-3 col-md-offset-7 col-xs-6">
-            <div class="input-group">
+             <div class="input-group">
                 <span class="input-group-addon bg-light-blue"><i class="fa fa-map-marker"></i></span>
                  <select class="form-control select2" id="stock_adjustment_location_filter">
                     @foreach($business_locations as $key => $value)

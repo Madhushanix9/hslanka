@@ -255,6 +255,7 @@
     <div class="col-md-6 col-sm-12 col-xs-12">
       <div class="table-responsive">
         <table class="table">
+          <thead>
           <tr class="bg-green">
             <th>#</th>
             <th>{{ __('messages.date') }}</th>
@@ -263,6 +264,7 @@
             <th>{{ __('sale.payment_mode') }}</th>
             <th>{{ __('sale.payment_note') }}</th>
           </tr>
+          </thead>
           @php
             $total_paid = 0;
           @endphp

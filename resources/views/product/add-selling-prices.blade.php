@@ -14,7 +14,7 @@
 	{!! Form::hidden('product_id', $product->id); !!}
 	<div class="row">
 		<div class="col-xs-12">
-		<div class="box box-solid">
+		<div class="box box-solid" style="border-radius: 15px;">
 			<div class="box-header">
 	            <h3 class="box-title">@lang('sale.product'): {{$product->name}} ({{$product->sku}})</h3>
 	        </div>
