@@ -397,6 +397,11 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::put('update-sales-orders/{id}/status', 'SalesOrderController@postEditSalesOrderStatus');
     Route::get('reports/activity-log', 'ReportController@activityLog');
     Route::get('user-location/{latlng}', 'HomeController@getUserLocation');
+
+    // HelaPOS routes
+    Route::post('/helapos/generate-qr', 'HelaPOSController@generateQR');
+    Route::post('/helapos/generate-qr-pos', 'HelaPOSController@generateQRFromPOS');
+    Route::post('/helapos/check-status', 'HelaPOSController@checkStatus');
 });
 
 

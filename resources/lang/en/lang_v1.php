@@ -129,6 +129,7 @@ return [
     'cheque' => 'Cheque',
     'bank_transfer' => 'Bank Transfer',
     'other' => 'Other',
+    'hela_qr' => 'HelaPOS QR',
     'payment' => 'Payment',
     'total_items' => 'Total Items',
     'total_paying' => 'Total Paying',
