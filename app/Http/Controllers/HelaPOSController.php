@@ -9,6 +9,7 @@ use App\Services\HelaPOSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class HelaPOSController extends Controller
 {
@@ -48,6 +49,11 @@ class HelaPOSController extends Controller
 
         $amount = $transaction->final_total - $transaction->payment_lines->sum('amount');
         
+        if (Cache::has('helapos_auth_throttled')) {
+            Log::warning('HelaPOS: Skipping QR Generation due to active cooling period.');
+            return response()->json(['error' => 'HelaPOS is cooling down. Please wait 5 minutes.'], 429);
+        }
+
         $helaPOSService = $this->getHelaPOSService($transaction->business_id);
         $qrData = $helaPOSService->generateQR($transaction->invoice_no, $amount);
 
@@ -116,20 +122,30 @@ class HelaPOSController extends Controller
 
     /**
      * Check payment status manually (triggered from frontend)
-     * Browser calls this to know when to submit the POS form.
      */
     public function checkStatus(Request $request)
     {
         $invoice_no = $request->input('invoice_no');
         $qr_reference = $request->input('qr_reference');
 
-        $transaction = Transaction::where('invoice_no', $invoice_no)->firstOrFail();
+        if (empty($invoice_no)) {
+             return response()->json(['error' => 'Empty invoice number'], 400);
+        }
+
+        $transaction = Transaction::where('invoice_no', $invoice_no)->first();
+       
+        if (!$transaction) {
+             Log::error('HelaPOS CheckStatus: Transaction not found for invoice_no: ' . $invoice_no);
+             return response()->json(['error' => 'Transaction not found: ' . $invoice_no], 404);
+        }
         
         $helaPOSService = $this->getHelaPOSService($transaction->business_id);
         $status = $helaPOSService->getPaymentStatus($invoice_no, $qr_reference);
 
-        // For browsing polling, we ONLY return the status. We DO NOT update the database here.
-        // Updating the database here would cause a race condition with the final POS form submission.
+        if (isset($status['statusCode']) && $status['statusCode'] == '429') {
+            return response()->json($status, 429);
+        }
+
         return response()->json($status);
     }
 
@@ -154,6 +170,11 @@ class HelaPOSController extends Controller
             
             $amount = $transaction->final_total - $transaction->payment_lines->sum('amount');
             
+            if (Cache::has('helapos_auth_throttled')) {
+                Log::warning('HelaPOS: Skipping POS QR Generation due to active cooling period.');
+                return response()->json(['error' => 'HelaPOS is cooling down. Please wait 5 minutes.'], 429);
+            }
+
             $helaPOSService = $this->getHelaPOSService($transaction->business_id);
             $qrData = $helaPOSService->generateQR($transaction->invoice_no, $amount);
 
