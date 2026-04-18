@@ -92,6 +92,11 @@ class HelaPOSController extends Controller
                         $this->transactionUtil->createOrUpdatePaymentLines($transaction, $payment_data, $transaction->business_id);
                         $this->transactionUtil->updatePaymentStatus($transaction->id);
 
+                        if ($transaction->status == 'draft') {
+                            $transaction->status = 'final';
+                            $transaction->save();
+                        }
+
                         DB::commit();
                         return response()->json(['status' => 'success'], 200);
 
@@ -111,6 +116,7 @@ class HelaPOSController extends Controller
 
     /**
      * Check payment status manually (triggered from frontend)
+     * Browser calls this to know when to submit the POS form.
      */
     public function checkStatus(Request $request)
     {
@@ -122,44 +128,9 @@ class HelaPOSController extends Controller
         $helaPOSService = $this->getHelaPOSService($transaction->business_id);
         $status = $helaPOSService->getPaymentStatus($invoice_no, $qr_reference);
 
-        if ($status && isset($status['statusCode']) && $status['statusCode'] == "200") {
-             if (isset($status['sale']) && $status['sale']['payment_status'] == 2) {
-                 if ($transaction->payment_status != 'paid') {
-                     $exists = $transaction->payment_lines()
-                                ->where('transaction_no', $status['sale']['reference_id'])
-                                ->exists();
-                     
-                     if (!$exists) {
-                        try {
-                            DB::beginTransaction();
-                            $payment_data = [
-                                [
-                                    'amount' => $status['sale']['amount'],
-                                    'method' => 'hela_qr',
-                                    'paid_on' => $status['sale']['timestamp'],
-                                    'note' => 'HelaPOS Status Check. Sale ID: ' . $status['sale']['sale_id'],
-                                    'transaction_no' => $status['sale']['reference_id']
-                                ]
-                            ];
-                            $this->transactionUtil->createOrUpdatePaymentLines($transaction, $payment_data, $transaction->business_id);
-                            $this->transactionUtil->updatePaymentStatus($transaction->id);
-                            if ($transaction->status == 'draft') {
-                                $transaction->status = 'final';
-                                $transaction->save();
-                            }
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-                            Log::error('HelaPOS Status Check update error: ' . $e->getMessage());
-                        }
-                     }
-                 }
-             }
-             return response()->json($status);
-        }
-
-
-        return response()->json(['error' => 'Failed to check status'], 500);
+        // For browsing polling, we ONLY return the status. We DO NOT update the database here.
+        // Updating the database here would cause a race condition with the final POS form submission.
+        return response()->json($status);
     }
 
     /**

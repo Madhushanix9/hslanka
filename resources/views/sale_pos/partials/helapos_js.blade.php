@@ -8,11 +8,11 @@
       <div class="modal-body text-center">
         <div id="helapos_qr_loading" style="display:none;">
             <i class="fas fa-sync fa-spin fa-3x"></i>
-            <p class="mt-2">Generating QR...</p>
+            <p class="mt-2 text-info">Generating QR code...</p>
         </div>
         <div id="helapos_qr_container" style="display:none;">
             <img id="helapos_qr_img" src="" class="img-thumbnail" style="width: 200px; height: 200px; margin: 0 auto; display: block;">
-            <p class="mt-2 text-bold">Scan with HelaPay or any LankaQR App</p>
+            <p class="mt-2 text-bold">Scan & Pay</p>
         </div>
         <div id="helapos_qr_status" style="margin-top: 15px;">
         </div>
@@ -27,7 +27,7 @@ $(document).ready(function() {
 
     $(document).on('hide.bs.modal', '#helapos_qr_modal', function() {
         if (helapos_check_interval) {
-            clearInterval(helapos_check_interval);
+            clearTimeout(helapos_check_interval);
             helapos_check_interval = null;
         }
     });
@@ -36,22 +36,12 @@ $(document).ready(function() {
         e.preventDefault();
         var button = $(this);
         
-        console.log("HelaPay button clicked. Utilizing dedicated modal pop-up.");
-
-        //Check if product is present or not.
         if ($('table#pos_table tbody').find('.product_row').length <= 0) {
             toastr.warning(LANG.no_products_added);
             return false;
         }
 
-        // Validate the form
-        if (typeof isValidPosForm === 'function') {
-            var is_valid = isValidPosForm();
-            if (is_valid != true) {
-                console.log("POS form validation failed.");
-                return false;
-            }
-        }
+        if (typeof isValidPosForm === 'function' && isValidPosForm() != true) return false;
 
         var amount = __read_number($('input#final_total_input'));
         var transaction_id = $('input#transaction_id').val();
@@ -65,170 +55,135 @@ $(document).ready(function() {
             $.ajax({
                 method: 'POST',
                 url: '/helapos/generate-qr-pos',
-                data: {
-                    transaction_id: t_id,
-                    amount: amount
-                },
+                data: { transaction_id: t_id, amount: amount },
                 dataType: 'json',
                 success: function(result) {
                     $('#helapos_qr_loading').hide();
-                    
                     if (result.statusCode == "200") {
                         var qr_data = result.qr_data || result.qrData;
-                        var qr_ref = result.qr_reference || result.qrReference;
-                        var invoice_no = result.reference;
-
-                        if (!qr_data) {
-                            $('#helapos_qr_status').html('<p class="text-danger">QR data missing from API response.</p>');
-                            return;
-                        }
-
                         var qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(qr_data);
                         $('#helapos_qr_img').attr('src', qr_url);
                         $('#helapos_qr_container').show();
-
-                        // Start polling
-                        startHelaPosPolling(invoice_no, qr_ref);
+                        startHelaPosPolling(result.reference, result.qr_reference || result.qrReference);
                     } else {
-                        $('#helapos_qr_status').html('<p class="text-danger">' + (result.message || 'Failed to generate QR') + '</p>');
+                        $('#helapos_qr_status').html('<p class="text-danger">Failed to generate QR</p>');
                     }
                 },
                 error: function(jqXHR) {
                     $('#helapos_qr_loading').hide();
-                    $('#helapos_qr_status').html('<p class="text-danger">Failed to communicate with QR server.</p>');
+                    var errorMsg = 'API Connection Error';
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+                        errorMsg = jqXHR.responseJSON.error;
+                    }
+                    $('#helapos_qr_status').html('<p class="text-danger">' + errorMsg + '</p>');
+                    toastr.error(errorMsg);
                 }
             });
         };
 
         if (!transaction_id) {
-            console.log("Saving draft via AJAX before generating QR...");
             var pos_form = $('form#add_pos_sell_form').length ? $('form#add_pos_sell_form') : $('form#edit_pos_sell_form');
-            var data = pos_form.serialize();
-            data = data + '&status=draft';
-            var url = pos_form.attr('action');
-
-            button.attr('disabled', true).html('<i class="fas fa-sync fa-spin"></i> Loading...');
-            
+            var data = pos_form.serialize() + '&status=draft';
+            button.attr('disabled', true).html('<i class="fas fa-sync fa-spin"></i>');
             $.ajax({
                 method: 'POST',
-                url: url,
+                url: pos_form.attr('action'),
                 data: data,
                 dataType: 'json',
                 success: function(result) {
                     button.attr('disabled', false).html('<i class="fas fa-qrcode"></i> HelaPay');
                     if (result.success == 1) {
+                        // Switch form to "Update" mode to avoid duplicates on final submit
+                        var update_url = pos_form.attr('action') + '/' + result.transaction_id;
+                        pos_form.attr('action', update_url);
+                        
+                        if (pos_form.find('input[name="_method"]').length === 0) {
+                            pos_form.append('<input type="hidden" name="_method" value="PUT">');
+                        }
+
                         if ($('input#transaction_id').length === 0) {
                             pos_form.append('<input type="hidden" id="transaction_id" name="transaction_id" value="' + result.transaction_id + '">');
                         } else {
                             $('input#transaction_id').val(result.transaction_id);
                         }
                         showQrModal(result.transaction_id);
-                    } else {
-                        toastr.error(result.msg);
-                    }
+                    } else { toastr.error(result.msg); }
                 },
                 error: function(jqXHR) {
-                    toastr.error('Failed to save transaction state.');
                     button.attr('disabled', false).html('<i class="fas fa-qrcode"></i> HelaPay');
+                    toastr.error('Failed to create draft sale. Please check logs.');
                 }
             });
-        } else {
-            showQrModal(transaction_id);
-        }
+        } else { showQrModal(transaction_id); }
     });
 
-    function startHelaPosPolling(invoice_no, qr_ref, div_context = null) {
-        if (helapos_check_interval) clearInterval(helapos_check_interval);
+    function startHelaPosPolling(invoice_no, qr_ref) {
+        if (helapos_check_interval) clearTimeout(helapos_check_interval);
+        $('#helapos_qr_status').html('<p class="text-info"><i class="fas fa-sync fa-spin"></i> Waiting for payment confirmation...</p>');
+        var pollInterval = 7000;
 
-        var statusElem = div_context ? div_context.find('.helapos_status_display') : $('#helapos_qr_status');
-        statusElem.html('<p class="text-info"><i class="fas fa-sync fa-spin"></i> Waiting for payment...</p>');
-
-        helapos_check_interval = setInterval(function() {
+        var pollHelaPos = function() {
             $.ajax({
                 method: 'POST',
                 url: '/helapos/check-status',
-                data: {
-                    invoice_no: invoice_no,
-                    qr_reference: qr_ref
-                },
+                data: { invoice_no: invoice_no, qr_reference: qr_ref },
                 dataType: 'json',
                 success: function(result) {
                     if (result.statusCode == "200" && result.sale && result.sale.payment_status == 2) {
-                        clearInterval(helapos_check_interval);
-                        statusElem.html('<p class="text-success"><i class="fas fa-check-circle"></i> Payment Confirmed!</p>');
-                        toastr.success('Payment Confirmed via HelaPOS');
-
-                        if (div_context) {
-                            // Split payment mode: Update the specific existing row
-                            var row = div_context.closest('.payment_row');
-                            var row_index = row.find('.payment_row_index').val();
+                        try {
+                            if (helapos_check_interval) clearTimeout(helapos_check_interval);
                             
-                            $('select[name="payment[' + row_index + '][method]"]').val('hela_qr');
-                            // Amount is already set by user in the field
-                            $('input[name="payment[' + row_index + '][transaction_no_1]"]').val(result.sale.reference_id || '');
-                        } else {
-                            // Express Check-out mode: Force single payment row for full amount
-                            var finalString = $('input#final_total_input').val();
-                            var methodSelect = $('select[name="payment[0][method]"]');
-                            if (methodSelect.length > 0) {
-                                methodSelect.val('hela_qr').trigger('change');
-                                $('input[name="payment[0][amount]"]').val(finalString);
-                                $('input[name="payment[0][transaction_no_1]"]').val(result.sale.reference_id || '');
-                            }
+                            // 1. Close Modal Instantly (Standard Cash Behavior)
+                            $('#helapos_qr_modal').modal('hide');
+                            
+                            var final_form = $('form#add_pos_sell_form, form#edit_pos_sell_form').first();
+                            var total_payable = $('input#final_total_input').val();
 
-                            // Remove extra rows to ensure clean sync
-                            $('.payment_row').each(function(i) {
+                            // 2. Clear other payment rows and inject HelaPay
+                            $('#payment_rows_div').find('.payment_row').each(function(i) {
                                 if (i > 0) $(this).remove();
                             });
-                        }
+                            
+                            var payment_row = $('#payment_rows_div').find('.payment_row').first();
+                            if (payment_row.length > 0) {
+                                payment_row.find('.payment_types_dropdown').val('hela_qr').trigger('change');
+                                var amount_field = payment_row.find('.payment-amount');
+                                if (typeof __write_number !== 'undefined') {
+                                    __write_number(amount_field, total_payable);
+                                } else {
+                                    amount_field.val(total_payable);
+                                }
+                                amount_field.trigger('change').trigger('input');
+                                payment_row.find('input[name*="[transaction_no_1]"]').val(result.sale.reference_id || '');
+                            }
 
-                        setTimeout(function() {
-                            $('#helapos_qr_modal').modal('hide');
-                            pos_form_obj.submit();
-                        }, 1500);
+                            // 3. Set Status to Final (to move to All Sales)
+                            if (final_form.find('input[name="status"]').length == 0) {
+                                final_form.append('<input type="hidden" name="status" value="final">');
+                            } else {
+                                final_form.find('input[name="status"]').val('final');
+                            }
+
+                            // 4. Force calculate & Submit (Native AJAX finalize)
+                            if (typeof calculate_balance_due !== 'undefined') calculate_balance_due();
+                            
+                            console.log('HelaPay: Finalizing transaction via native AJAX logic...');
+                            final_form.submit();
+                        } catch (e) {
+                            console.error('Finalize Error:', e);
+                            $('form#add_pos_sell_form, form#edit_pos_sell_form').first().submit();
+                        }
+                    } else {
+                        helapos_check_interval = setTimeout(pollHelaPos, pollInterval);
                     }
+                },
+                error: function(jqXHR) {
+                    if (jqXHR.status == 429) pollInterval = 20000;
+                    helapos_check_interval = setTimeout(pollHelaPos, pollInterval);
                 }
             });
-        }, 5000); 
+        };
+        helapos_check_interval = setTimeout(pollHelaPos, pollInterval);
     }
-
-    $(document).on('click', '.generate_helapos_qr', function() {
-        var btn = $(this);
-        var div = btn.closest('.payment_details_div');
-        var row_index = div.closest('.payment_row').find('.payment_row_index').val();
-        var amount = $('input#amount_' + row_index).val();
-        var transaction_id = $('input#transaction_id').val();
-        
-        if (!transaction_id) {
-            toastr.error('Please save as draft or use HelaPay express button first.');
-            return;
-        }
-
-        btn.attr('disabled', true).text('Generating...');
-
-        $.ajax({
-            method: 'POST',
-            url: '/helapos/generate-qr-pos',
-            data: { transaction_id: transaction_id, amount: amount },
-            dataType: 'json',
-            success: function(result) {
-                if (result.statusCode == "200" && (result.qr_data || result.qrData)) {
-                    var qr_data = result.qr_data || result.qrData;
-                    var qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(qr_data);
-                    div.find('.helapos_qr_display').html('<img src="' + qr_url + '" class="img-thumbnail"><br><strong>Scan with HelaPay App</strong>');
-                    btn.hide();
-                    startHelaPosPolling(result.reference, result.qr_reference || result.qrReference, div);
-                } else {
-                    toastr.error('Failed to generate QR');
-                    btn.attr('disabled', false).text('Generate HelaPOS QR');
-                }
-            },
-            error: function() {
-                toastr.error('API Error');
-                btn.attr('disabled', false).text('Generate HelaPOS QR');
-            }
-        });
-    });
 });
 </script>
-

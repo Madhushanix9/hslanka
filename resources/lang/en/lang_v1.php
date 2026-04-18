@@ -1480,5 +1480,7 @@ return [
     'back_to_username' => 'Back to :username',
     'all_due' => 'All Due',
     'total_due' => 'Total Due',
-    'standard' => 'Standard'
+    'standard' => 'Standard',
+    'hela_qr' => 'HelaPay',
+    'helapay_qr' => 'HelaPay'
 ];
