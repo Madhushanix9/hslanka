@@ -69,8 +69,8 @@ class HelaPOSService
         } catch (\Exception $e) {
             // 2. If we hit a 429, enter a 5-minute cooling period to prevent IP bans
             if (strpos($e->getMessage(), '429') !== false) {
-                Log::warning('HelaPOS: Rate limit hit on getToken. Entering cooling period.');
-                Cache::put('helapos_auth_throttled', true, now()->addMinutes(5));
+                Log::warning('HelaPOS: Rate limit hit. Entering short cooling period.');
+                Cache::put('helapos_auth_throttled', true, now()->addSeconds(30));
             }
             Log::error('HelaPOS getToken exception: ' . $e->getMessage());
             return null;

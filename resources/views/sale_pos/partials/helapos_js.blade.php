@@ -72,6 +72,20 @@ $(document).ready(function() {
                 error: function(jqXHR) {
                     $('#helapos_qr_loading').hide();
                     var errorMsg = 'API Connection Error';
+                    var status = jqXHR.status;
+
+                    // Permanent Fix: Auto-retry on 429 (Rate Limit)
+                    var retries = button.data('retries') || 0;
+                    if (status == 429 && retries < 3) {
+                        button.data('retries', retries + 1);
+                        $('#helapos_qr_status').html('<p class="text-warning"><i class="fas fa-history"></i> HelaPOS busy, retrying in 5s... (' + (retries + 1) + '/3)</p>');
+                        setTimeout(function() {
+                            button.trigger('click');
+                        }, 5000);
+                        return;
+                    }
+                    button.data('retries', 0); // Reset on real fail
+
                     if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
                         errorMsg = jqXHR.responseJSON.error;
                     }
@@ -178,7 +192,10 @@ $(document).ready(function() {
                     }
                 },
                 error: function(jqXHR) {
-                    if (jqXHR.status == 429) pollInterval = 20000;
+                    if (jqXHR.status == 429) {
+                        pollInterval = 30000;
+                        console.warn('HelaPOS: Polling throttled. Backing off to 30s.');
+                    }
                     helapos_check_interval = setTimeout(pollHelaPos, pollInterval);
                 }
             });
