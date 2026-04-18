@@ -157,7 +157,31 @@ $(document).ready(function() {
                         clearInterval(helapos_check_interval);
                         statusElem.html('<p class="text-success"><i class="fas fa-check-circle"></i> Payment Confirmed!</p>');
                         toastr.success('Payment Confirmed via HelaPOS');
-                        
+
+                        if (div_context) {
+                            // Split payment mode: Update the specific existing row
+                            var row = div_context.closest('.payment_row');
+                            var row_index = row.find('.payment_row_index').val();
+                            
+                            $('select[name="payment[' + row_index + '][method]"]').val('hela_qr');
+                            // Amount is already set by user in the field
+                            $('input[name="payment[' + row_index + '][transaction_no_1]"]').val(result.sale.reference_id || '');
+                        } else {
+                            // Express Check-out mode: Force single payment row for full amount
+                            var finalString = $('input#final_total_input').val();
+                            var methodSelect = $('select[name="payment[0][method]"]');
+                            if (methodSelect.length > 0) {
+                                methodSelect.val('hela_qr').trigger('change');
+                                $('input[name="payment[0][amount]"]').val(finalString);
+                                $('input[name="payment[0][transaction_no_1]"]').val(result.sale.reference_id || '');
+                            }
+
+                            // Remove extra rows to ensure clean sync
+                            $('.payment_row').each(function(i) {
+                                if (i > 0) $(this).remove();
+                            });
+                        }
+
                         setTimeout(function() {
                             $('#helapos_qr_modal').modal('hide');
                             pos_form_obj.submit();
