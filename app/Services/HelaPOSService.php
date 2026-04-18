@@ -75,7 +75,7 @@ class HelaPOSService
     /**
      * Generate Dynamic QR Code
      */
-    public function generateQR($reference, $amount)
+    public function generateQR($reference, $amount, $retry = true)
     {
         $token = $this->getAccessToken();
         if (!$token) return null;
@@ -104,6 +104,15 @@ class HelaPOSService
             Log::error('HelaPOS generateQR error: ' . json_encode($data));
             return null;
 
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            if ($e->getResponse()->getStatusCode() == 401 && $retry) {
+                // Token expired, clear cache and retry
+                $cacheKey = 'helapos_access_token_' . md5($this->appId);
+                Cache::forget($cacheKey);
+                return $this->generateQR($reference, $amount, false);
+            }
+            Log::error('HelaPOS generateQR ClientException: ' . $e->getMessage());
+            return null;
         } catch (\Exception $e) {
             Log::error('HelaPOS generateQR exception: ' . $e->getMessage());
             return null;
@@ -113,7 +122,7 @@ class HelaPOSService
     /**
      * Check Payment Status
      */
-    public function getPaymentStatus($reference, $qr_reference = null)
+    public function getPaymentStatus($reference, $qr_reference = null, $retry = true)
     {
         $token = $this->getAccessToken();
         if (!$token) return null;
@@ -142,6 +151,15 @@ class HelaPOSService
 
             return $data;
 
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            if ($e->getResponse()->getStatusCode() == 401 && $retry) {
+                // Token likely expired or invalid, clear cache and retry once
+                $cacheKey = 'helapos_access_token_' . md5($this->appId);
+                Cache::forget($cacheKey);
+                return $this->getPaymentStatus($reference, $qr_reference, false);
+            }
+            Log::error('HelaPOS getPaymentStatus ClientException: ' . $e->getMessage());
+            return null;
         } catch (\Exception $e) {
             Log::error('HelaPOS getPaymentStatus exception: ' . $e->getMessage());
             return null;
