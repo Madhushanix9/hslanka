@@ -75,7 +75,8 @@ class HelaPOSController extends Controller
 
         if (isset($payload['statusCode']) && $payload['statusCode'] == "200" && isset($payload['sale'])) {
             $sale = $payload['sale'];
-            $invoice_no = $payload['reference']; 
+            $raw_reference = $payload['reference'];
+            $invoice_no = explode('-', $raw_reference)[0]; 
             
             if ($sale['payment_status'] == 2) {
                 // We don't have business_id in payload, so we find transaction first
@@ -132,7 +133,8 @@ class HelaPOSController extends Controller
              return response()->json(['error' => 'Empty invoice number'], 400);
         }
 
-        $transaction = Transaction::where('invoice_no', $invoice_no)->first();
+        $base_invoice_no = explode('-', $invoice_no)[0];
+        $transaction = Transaction::where('invoice_no', $base_invoice_no)->first();
        
         if (!$transaction) {
              Log::error('HelaPOS CheckStatus: Transaction not found for invoice_no: ' . $invoice_no);
@@ -168,19 +170,23 @@ class HelaPOSController extends Controller
 
             $transaction = Transaction::where('business_id', $business_id)->findOrFail($transaction_id);
             
-            $amount = $transaction->final_total - $transaction->payment_lines->sum('amount');
+            $amount = !empty($input['amount']) ? (double) $input['amount'] : ($transaction->final_total - $transaction->payment_lines->sum('amount'));
             
             if (Cache::has('helapos_auth_throttled')) {
                 Log::warning('HelaPOS: Skipping POS QR Generation due to active cooling period.');
                 return response()->json(['error' => 'HelaPOS is cooling down. Please wait 5 minutes.'], 429);
             }
 
+            $unique_reference = $transaction->invoice_no . '-' . time();
             $helaPOSService = $this->getHelaPOSService($transaction->business_id);
-            $qrData = $helaPOSService->generateQR($transaction->invoice_no, $amount);
+            $qrData = $helaPOSService->generateQR($unique_reference, $amount);
 
             DB::commit();
             
             if ($qrData) {
+                if (isset($qrData['statusCode']) && $qrData['statusCode'] == '429') {
+                    return response()->json($qrData, 429);
+                }
                 return response()->json($qrData);
             }
             return response()->json(['error' => 'HelaPOS API Error'], 500);

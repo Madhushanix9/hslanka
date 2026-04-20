@@ -28,6 +28,26 @@
 $(document).ready(function() {
     var helapos_check_interval = null;
 
+    // Securely un-hijack the POS form when UltimatePOS resets it
+    if (typeof window.reset_pos_form === 'function' && !window.helapos_reset_hooked) {
+        window.helapos_reset_hooked = true;
+        var original_reset_pos_form = window.reset_pos_form;
+        window.reset_pos_form = function() {
+            var pos_form = $('form#add_pos_sell_form');
+            var trans_id = $('input#transaction_id').val();
+            if (trans_id && pos_form.length) {
+                 pos_form.attr('action', pos_form.attr('action').replace('/' + trans_id, ''));
+            }
+            pos_form.find('input[name="_method"]').remove();
+            $('input#transaction_id').remove();
+            if (pos_form.find('input[name="status"]').val() == 'final') {
+                 pos_form.find('input[name="status"]').val('draft');
+                 pos_form.find('input[name="status"]').remove();
+            }
+            original_reset_pos_form.apply(this, arguments);
+        };
+    }
+
     $(document).on('hide.bs.modal', '#helapos_qr_modal', function() {
         if (helapos_check_interval) {
             clearTimeout(helapos_check_interval);
