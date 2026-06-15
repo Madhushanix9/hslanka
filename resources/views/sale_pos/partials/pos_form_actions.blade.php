@@ -35,6 +35,13 @@
 				</button>
 			@endif
 			<button type="button" 
+				class="btn bg-blue btn-default btn-flat no-print pos-helapay-qr @if(!array_key_exists('hela_qr', $payment_types)) hide @endif @if($is_mobile) col-xs-6 @endif" 
+				data-pay_method="hela_qr"
+				title="HelaPay" >
+				<i class="fas fa-qrcode" aria-hidden="true"></i> HelaPay
+			</button>
+
+			<button type="button" 
 				class="btn bg-maroon btn-default btn-flat no-print @if(!empty($pos_settings['disable_suspend'])) @endif pos-express-finalize @if(!array_key_exists('card', $payment_types)) hide @endif @if($is_mobile) col-xs-6 @endif" 
 				data-pay_method="card"
 				title="@lang('lang_v1.tooltip_express_checkout_card')" >

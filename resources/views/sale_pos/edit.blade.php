@@ -102,7 +102,7 @@
             @endif
 	    @endforeach
 	@endif
-	
+    @include('sale_pos.partials.helapos_js')
 @endsection
 
 @section('css')

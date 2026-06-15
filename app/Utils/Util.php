@@ -178,11 +178,14 @@ class Util
                 }
             }
             foreach ($payment_types as $key => $value) {
-                if (!in_array($key, $enabled_accounts)) {
+                if (!in_array($key, $enabled_accounts) && $key != 'hela_qr') {
                     unset($payment_types[$key]);
                 }
             }
         }
+
+        // Explicitly safely add HelaPOS QR
+        $payment_types['hela_qr'] = __('lang_v1.helapay_qr') ?? 'HelaPay QR';
 
         if ($show_advance) {
             $payment_types = ['advance' => __('lang_v1.advance')] + $payment_types;

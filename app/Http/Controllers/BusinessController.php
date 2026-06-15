@@ -446,6 +446,11 @@ class BusinessController extends Controller
 
             $business_details['common_settings'] = !empty($request->input('common_settings')) ? $request->input('common_settings') : [];
 
+            // Preserve HelaPOS App Secret if empty
+            if (empty($business_details['common_settings']['helapos_settings']['app_secret']) && !empty($business->common_settings['helapos_settings']['app_secret'])) {
+                $business_details['common_settings']['helapos_settings']['app_secret'] = $business->common_settings['helapos_settings']['app_secret'];
+            }
+
             //Enabled modules
             $enabled_modules = $request->input('enabled_modules');
             $business_details['enabled_modules'] = !empty($enabled_modules) ? $enabled_modules : null;

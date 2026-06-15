@@ -129,6 +129,7 @@ return [
     'cheque' => 'Cheque',
     'bank_transfer' => 'Bank Transfer',
     'other' => 'Other',
+    'hela_qr' => 'HelaPOS QR',
     'payment' => 'Payment',
     'total_items' => 'Total Items',
     'total_paying' => 'Total Paying',
@@ -1479,5 +1480,7 @@ return [
     'back_to_username' => 'Back to :username',
     'all_due' => 'All Due',
     'total_due' => 'Total Due',
-    'standard' => 'Standard'
+    'standard' => 'Standard',
+    'hela_qr' => 'HelaPay',
+    'helapay_qr' => 'HelaPay'
 ];
